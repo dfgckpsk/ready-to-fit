@@ -1,7 +1,7 @@
-from data.MlData import MlData
-from db.MlTsValues import MlTsValues
-from db.MLDatabaseManager import MLDatabaseManager
-from tools.logging import logged
+from ml.data.MlData import MlData
+from ml.db.MlTsValues import MlTsValues
+from ml.db.MLDatabaseManager import MLDatabaseManager
+from ml.tools.logging import logged
 
 
 @logged

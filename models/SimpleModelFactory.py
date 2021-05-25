@@ -1,6 +1,6 @@
 from .LGBMModel import LGMBModel
 from .SLModel import SLModel
-from tools.logging import logged
+from ml.tools.logging import logged
 
 
 @logged

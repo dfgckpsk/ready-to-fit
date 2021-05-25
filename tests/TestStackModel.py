@@ -1,11 +1,11 @@
 from unittest import TestCase
-from models.ModelFactory import ModelFactory
-from tests.AppendFeatureCreator import AppendFeatureCreator
+from ml.models.ModelFactory import ModelFactory
+from ml.tests.AppendFeatureCreator import AppendFeatureCreator
 from sklearn.datasets import load_iris
-from data.MlDataFactory import MlDataFactory
-from cv.SLCV import SLCV
-from models.SLModel import SLModel
-from models.LGBMModel import LGMBModel
+from ml.data.MlDataFactory import MlDataFactory
+from ml.cv.SLCV import SLCV
+from ml.models.SLModel import SLModel
+from ml.models.LGBMModel import LGMBModel
 
 
 class TestStackModel(TestCase):

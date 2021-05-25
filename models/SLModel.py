@@ -1,10 +1,10 @@
-from models.Model import Model
-from data.MlData import MlData
+from ml.models.Model import Model
+from ml.data.MlData import MlData
 from sklearn.utils import _joblib
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.decomposition import PCA
-from tools.logging import logged
+from ml.tools.logging import logged
 
 
 @logged

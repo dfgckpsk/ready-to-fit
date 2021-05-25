@@ -1,6 +1,6 @@
 import pandas as pd
 from typing import List
-from tools.logging import logged
+from ml.tools.logging import logged
 
 
 @logged

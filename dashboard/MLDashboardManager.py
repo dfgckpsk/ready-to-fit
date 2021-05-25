@@ -1,4 +1,4 @@
-from db.MLDatabaseManager import MLDatabaseManager
+from ml.db.MLDatabaseManager import MLDatabaseManager
 from datetime import datetime
 
 

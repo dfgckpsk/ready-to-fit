@@ -1,7 +1,7 @@
-from db.BaseDatabase import BaseDatabase
-from db.CreatedMlModels import CreatedMlModels
-from db.ExperimentInfo import ExperimentInfo
-from db.MlTsValues import MlTsValues
+from ml.db.BaseDatabase import BaseDatabase
+from ml.db.CreatedMlModels import CreatedMlModels
+from ml.db.ExperimentInfo import ExperimentInfo
+from ml.db.MlTsValues import MlTsValues
 from datetime import datetime
 from typing import List
 

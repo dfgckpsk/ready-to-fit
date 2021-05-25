@@ -3,8 +3,8 @@ import dash_html_components as html
 import dash_table as dtable
 from dash.dependencies import Input, Output
 from dash.exceptions import PreventUpdate
-from dashboard.MLDashboardManager import MlDashboardManager
-from db.CreatedMlModels import CreatedMlModels
+from ml.dashboard.MLDashboardManager import MlDashboardManager
+from ml.db.CreatedMlModels import CreatedMlModels
 
 EXP_ID_TABLE = 'experiments-id'
 UPDATE_RUNS_ID = 'update-runs-button'

@@ -1,4 +1,4 @@
-from data.MlData import MlData
+from ml.data.MlData import MlData
 
 
 class CVBase:

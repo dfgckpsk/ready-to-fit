@@ -1,5 +1,5 @@
-from data.FeatureCreator import FeatureCreator, MlData
-from data.MlDataFactory import MlDataFactory
+from ml.data.FeatureCreator import FeatureCreator, MlData
+from ml.data.MlDataFactory import MlDataFactory
 import pandas as pd
 
 

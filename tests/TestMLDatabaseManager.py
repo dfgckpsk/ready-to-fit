@@ -1,6 +1,6 @@
 from unittest import TestCase
-from db.MLDatabaseManager import MLDatabaseManager, MlTsValues, CreatedMlModels
-from db.clickhouse import Clickhouse
+from ml.db.MLDatabaseManager import MLDatabaseManager, MlTsValues, CreatedMlModels
+from ml.db.clickhouse import Clickhouse
 import datetime
 import time
 

@@ -1,7 +1,7 @@
 from unittest import TestCase
-from data.MlDataFactory import MlDataFactory
-from classification.DownsampleFC import DownsampleFC
-from classification.UpsampleFC import UpsampleFC
+from ml.data.MlDataFactory import MlDataFactory
+from ml.classification.DownsampleFC import DownsampleFC
+from ml.classification.UpsampleFC import UpsampleFC
 import numpy as np
 
 

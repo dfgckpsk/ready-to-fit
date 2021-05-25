@@ -1,6 +1,6 @@
-from tools.logging import logged
+from ml.tools.logging import logged
 from .MlData import MlData
-from db.MLDatabaseManager import MLDatabaseManager, MlTsValues
+from ml.db.MLDatabaseManager import MLDatabaseManager, MlTsValues
 
 
 @logged

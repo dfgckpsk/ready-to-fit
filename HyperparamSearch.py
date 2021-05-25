@@ -1,11 +1,11 @@
-from ModelCreator import ModelCreator
-from data.LabelCreator import LabelCreator
-from data.FeatureCreator import FeatureCreator
-from metric.MetricBase import MetricBase
-from db.MLDatabaseManager import MLDatabaseManager
-from data.MlData import MlData
-from search.GridSearch import GridSearch
-from cv.CVBase import CVBase
+from ml.ModelCreator import ModelCreator
+from ml.data.LabelCreator import LabelCreator
+from ml.data.FeatureCreator import FeatureCreator
+from ml.metric.MetricBase import MetricBase
+from ml.db.MLDatabaseManager import MLDatabaseManager
+from ml.data.MlData import MlData
+from ml.search.GridSearch import GridSearch
+from ml.cv.CVBase import CVBase
 from typing import List, Optional
 from datetime import datetime
 

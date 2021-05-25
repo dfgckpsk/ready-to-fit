@@ -1,14 +1,14 @@
-from cv.CVBase import CVBase
-from data.FeatureCreator import FeatureCreator
-from data.LabelCreator import LabelCreator
-from data.MlData import MlData
-from data.MlDataFactory import MlDataFactory
-from db.CreatedMlModels import CreatedMlModels
-from db.MLDatabaseManager import MLDatabaseManager, MlTsValues
-from metric.MetricBase import MetricBase
-from models.ModelFactory import ModelFactory
+from ml.cv.CVBase import CVBase
+from ml.data.FeatureCreator import FeatureCreator
+from ml.data.LabelCreator import LabelCreator
+from ml.data.MlData import MlData
+from ml.data.MlDataFactory import MlDataFactory
+from ml.db.CreatedMlModels import CreatedMlModels
+from ml.db.MLDatabaseManager import MLDatabaseManager, MlTsValues
+from ml.metric.MetricBase import MetricBase
+from ml.models.ModelFactory import ModelFactory
 from typing import List, Optional
-from tools import logged
+from ml.tools import logged
 
 from datetime import datetime
 import numpy as np

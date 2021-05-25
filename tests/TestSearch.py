@@ -1,5 +1,5 @@
-from search.GridSearch import GridSearch
-from search.RandomSearch import RandomSearch
+from ml.search.GridSearch import GridSearch
+from ml.search.RandomSearch import RandomSearch
 from unittest import TestCase
 
 

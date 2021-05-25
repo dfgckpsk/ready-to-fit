@@ -1,8 +1,8 @@
 import dash
 import dash_html_components as html
-from tools import logged
-from dashboard.MLDashboardManager import MlDashboardManager
-from dashboard.exp_list_layout import exp_layout, exp_callback
+from ml.tools import logged
+from ml.dashboard.MLDashboardManager import MlDashboardManager
+from ml.dashboard.exp_list_layout import exp_layout, exp_callback
 
 
 @logged

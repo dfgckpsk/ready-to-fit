@@ -1,6 +1,6 @@
 import numpy as np
 from .CVBase import CVBase, MlData
-from tools.logging import logged
+from ml.tools.logging import logged
 
 
 WIDE_MODE = 'wide'

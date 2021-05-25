@@ -1,6 +1,6 @@
 from .CVBase import CVBase, MlData
 from sklearn.model_selection import KFold, StratifiedKFold
-from tools.logging import logged
+from ml.tools.logging import logged
 
 
 @logged

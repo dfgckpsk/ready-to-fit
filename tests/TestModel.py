@@ -1,17 +1,17 @@
 import unittest
 from sklearn.datasets import load_iris
-from cv.SLCV import SLCV
-from data.FeatureCreator import FeatureCreator
-from data.LabelCreator import LabelCreator
-from data.MlDataFactory import MlDataFactory
-from db.MLDatabaseManager import MLDatabaseManager
-from metric.SLMetric import SLMetric
-from models.LGBMModel import LGMBModel
-from models.SLModel import SLModel
-from tests.AppendFeatureCreator import AppendFeatureCreator
-from tests.AppendLabelCreator import AppendLabelCreator
-from ModelCreator import ModelCreator
-from db.clickhouse import Clickhouse
+from ml.cv.SLCV import SLCV
+from ml.data.FeatureCreator import FeatureCreator
+from ml.data.LabelCreator import LabelCreator
+from ml.data.MlDataFactory import MlDataFactory
+from ml.db.MLDatabaseManager import MLDatabaseManager
+from ml.metric.SLMetric import SLMetric
+from ml.models.LGBMModel import LGMBModel
+from ml.models.SLModel import SLModel
+from ml.tests.AppendFeatureCreator import AppendFeatureCreator
+from ml.tests.AppendLabelCreator import AppendLabelCreator
+from ml.ModelCreator import ModelCreator
+from ml.db.clickhouse import Clickhouse
 from datetime import datetime
 
 

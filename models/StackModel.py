@@ -1,7 +1,7 @@
 from .Model import Model, MlData
-from models.SimpleModelFactory import SimpleModelFactory
-from data.MlDataFactory import MlDataFactory
-from tools.logging import logged
+from ml.models.SimpleModelFactory import SimpleModelFactory
+from ml.data.MlDataFactory import MlDataFactory
+from ml.tools.logging import logged
 from typing import List
 
 

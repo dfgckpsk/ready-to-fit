@@ -1,7 +1,7 @@
 from .Model import Model, MlData
 import lightgbm as lgb
 import numpy as np
-from tools.logging import logged
+from ml.tools.logging import logged
 
 
 @logged

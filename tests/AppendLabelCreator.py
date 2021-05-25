@@ -1,4 +1,4 @@
-from data.LabelCreator import LabelCreator, MlData
+from ml.data.LabelCreator import LabelCreator, MlData
 
 
 class AppendLabelCreator(LabelCreator):

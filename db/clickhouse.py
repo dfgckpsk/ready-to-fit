@@ -1,6 +1,6 @@
-from tools.logging import logged
+from ml.tools.logging import logged
 import pandas as pd
-from db.BaseDatabase import BaseDatabase
+from ml.db.BaseDatabase import BaseDatabase
 import clickhouse_driver
 
 

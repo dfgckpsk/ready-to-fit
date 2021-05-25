@@ -1,7 +1,7 @@
 from .LGBMModel import LGMBModel
 from .SLModel import SLModel
-from models.StackModel import StackModel
-from tools.logging import logged
+from ml.models.StackModel import StackModel
+from ml.tools.logging import logged
 
 
 @logged

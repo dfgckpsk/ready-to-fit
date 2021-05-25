@@ -1,5 +1,5 @@
-from data.FeatureCreator import FeatureCreator
-from data.MlData import MlData
+from ml.data.FeatureCreator import FeatureCreator
+from ml.data.MlData import MlData
 
 
 class AppendFeatureCreator(FeatureCreator):
