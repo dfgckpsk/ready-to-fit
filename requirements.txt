@@ -3,3 +3,7 @@ pandas
 lightgbm
 sklearn
 clickhouse_driver
+dash
+dash_html_components
+dash_core_components
+dash_table
