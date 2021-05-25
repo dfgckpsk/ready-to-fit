@@ -7,7 +7,6 @@ from ml.db.CreatedMlModels import CreatedMlModels
 from ml.db.MLDatabaseManager import MLDatabaseManager, MlTsValues
 from ml.metric.MetricBase import MetricBase
 from ml.models.ModelFactory import ModelFactory
-from common.market.MarketIndex import MarketIndex
 from typing import List, Optional
 from ml.tools.logging import logged
 
@@ -112,22 +111,22 @@ class ModelCreator:
             created_ml_model = CreatedMlModels.from_meta(in_meta)
             self.ml_database_manager.insert_experiment(created_ml_model)
 
-    def train(self, ml_data: MlData, current_index: MarketIndex = None):
+    def train(self, ml_data: MlData):
         try:
-            model, meta, _ = self._train(ml_data, current_index)
+            model, meta, _ = self._train(ml_data)
             self.log_meta(meta)
             return model, meta
         except BaseException as e:
             self._error(e)
             return None, None
 
-    def _train(self, ml_data: MlData, current_index: MarketIndex):
+    def _train(self, ml_data: MlData):
         seed = self.set_seeds(self.seed)
         new_ml_data = self.prepare_data(ml_data, preparing_for_validation=False)
         model = ModelFactory().get_model(self.model_name, self.parameters)
         meta = model.fit(new_ml_data)
-        if current_index is not None:
-            meta['current_index'] = current_index.get_datetime()
+        # if current_index is not None:
+        #     meta['current_index'] = current_index.get_datetime()
         meta['features_count'] = len(new_ml_data.feature_names)
         meta['data_length'] = len(new_ml_data)
         meta['seed'] = seed
@@ -170,13 +169,13 @@ class ModelCreator:
             meta = {**meta, **metric_results, **metric_results_train}
         return meta
 
-    def validation(self, ml_data: MlData, cv: CVBase, current_index: MarketIndex = None, return_models: bool = False):
+    def validation(self, ml_data: MlData, cv: CVBase, return_models: bool = False):
         split_num = 0
         models = []
         for train_indexes, test_indexes in cv.split(ml_data):
             train_data = MlDataFactory().ml_data_from_ml_data(ml_data,
                                                               train_indexes)
-            model, meta, prepared_train = self._train(train_data, current_index)
+            model, meta, prepared_train = self._train(train_data)
             models.append(model)
             test_data = MlDataFactory().ml_data_from_ml_data(ml_data,
                                                              test_indexes)

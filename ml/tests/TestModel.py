@@ -11,7 +11,6 @@ from ml.models.SLModel import SLModel
 from ml.tests.AppendFeatureCreator import AppendFeatureCreator
 from ml.tests.AppendLabelCreator import AppendLabelCreator
 from ml.ModelCreator import ModelCreator
-from common.market.MarketIndex import MarketIndex
 from ml.db.clickhouse import Clickhouse
 from datetime import datetime
 
@@ -64,7 +63,7 @@ class TestModel(unittest.TestCase):
                                                  'num_iterations': 1},
                                      ml_database_manager=ml_model_manager,
                                      run_id=run_id)
-        model_creator.train(self._ml_data, MarketIndex.get_from_datetime(datetime.now()))
+        model_creator.train(self._ml_data)
 
         results = ml_model_manager.get_run_result(run_id)
         print(results)
