@@ -34,6 +34,18 @@ class MLDatabaseManager:
         results = list(map(lambda x: CreatedMlModels(*x), results))
         return results
 
+    def get_run_id_by_exp(self, exp_id: str):
+
+        query = f"""
+        select run_id
+        from backtest.created_ml_models 
+        where exp_id == '{exp_id}'
+        group by run_id;
+        """
+
+        results = self.db.get_all(query)
+        return results
+
     def get_exp_ids(self) -> List[ExperimentInfo]:
 
         query = f"""

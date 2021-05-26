@@ -22,3 +22,6 @@ class MlDashboardManager:
     def get_ts_metrics(self, run_id: datetime):
         ts_metrics = self.database_manager.get_ts_metrics(run_id)
         metrics_names = list(map(lambda x: x.value_name, ts_metrics))
+
+    def get_run_id_by_exp(self, exp_id: str):
+        return self.database_manager.get_run_id_by_exp(exp_id)
