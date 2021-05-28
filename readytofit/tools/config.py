@@ -12,6 +12,8 @@ class Config:
         return len(status) != 0
 
     def get_log_level(self):
+        if 'LOGGING' not in self._config["LOGGING"]:
+            return logging.INFO
         log_level = self._config["LOGGING"]["log_level"]
         if log_level == "CRITICAL":
             return logging.CRITICAL
