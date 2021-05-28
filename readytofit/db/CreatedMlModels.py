@@ -60,6 +60,12 @@ class CreatedMlModels:
     def to_dict(self):
         return self.__dict__
 
+    def to_dict_str(self):
+        new_dict = {}
+        for key in self.__dict__.keys():
+            new_dict[key] = str(self.__dict__[key])
+        return new_dict
+
     @staticmethod
     def get_field_names():
         return ['exp_id', 'run_id', 'current_index', 'config', 'model_id', 'seed',

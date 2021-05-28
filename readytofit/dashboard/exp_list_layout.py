@@ -87,7 +87,7 @@ def exp_callback(app, ml_dashboard_manager: MlDashboardManager):
         if exp_id is None:
             raise PreventUpdate()
         experiments = ml_dashboard_manager.get_experiment_results(exp_id)
-        experiments = list(map(lambda x: x.to_dict(), experiments))
+        experiments = list(map(lambda x: x.to_dict_str(), experiments))
         columns = list(map(lambda x: {'name': x, 'id': x}, columns))
 
         return experiments, columns, True
