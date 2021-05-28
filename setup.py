@@ -13,6 +13,7 @@ setup(
     author_email='dfgckpsk@gmail.com',
     version=readytofit.__version__,
     include_package_data=True,
+    data_files=[('/etc', ['readytofit/tools/log_cfg.ini'])],
     packages=find_packages(),
     long_description=open(join(dirname(__file__), 'README.md')).read(),
     install_requires=install_reqs,
