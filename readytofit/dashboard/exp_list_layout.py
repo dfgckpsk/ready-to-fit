@@ -72,7 +72,7 @@ def exp_callback(app, ml_dashboard_manager: MlDashboardManager):
                   [Input(UPDATE_RUNS_ID, 'n_clicks')])
     def update_experiments(n_clicks):
         runs = ml_dashboard_manager.get_exp_ids()
-        runs = sorted(runs, reverse=True,  key=lambda x: x.min_date)
+        runs = sorted(runs, reverse=True,  key=lambda x: x.max_date)
         exp_ids = list(map(lambda x: x.exp_id, runs))
         runs = list(map(lambda x: x.to_dict(), runs))
         return runs, True, [{'label': i, 'value': i} for i in exp_ids]

@@ -1,5 +1,5 @@
 from unittest import TestCase
-from readytofit.db.MLDatabaseManager import MLDatabaseManager, MlTsValues, CreatedMlModels
+from readytofit.db.MLDatabaseManager import MLDatabaseManager, MlTsValues, CreatedMlModels, MlParameter
 from readytofit.db.clickhouse import Clickhouse
 import datetime
 import time
@@ -63,3 +63,22 @@ class TestMLDatabaseManager(TestCase):
             assert ml_ts_values.split_num == got_ml_ts_values.split_num
 
         self._database.execute(f"ALTER TABLE backtest.ml_ts_values DELETE WHERE run_id == '{dt}'")
+
+    def test_ml_parameter_inserting(self):
+        ml_model_manager = MLDatabaseManager(self._database)
+
+        dt = datetime.datetime.now() - datetime.timedelta(days=2000)
+        ml_parameter_1 = MlParameter(dt, 'param1', str_value='fsdf')
+        ml_parameter_2 = MlParameter(dt, 'param2', float_value=56.5, split_num=1)
+        ml_model_manager.insert_parameters([ml_parameter_1, ml_parameter_2])
+
+        got_ml_parameters = ml_model_manager.get_ml_parameters(dt)
+
+        for source_param, got_param in zip([ml_parameter_1, ml_parameter_2], got_ml_parameters):
+            self.assertEqual(source_param.run_id, got_param.run_id)
+            self.assertEqual(source_param.parameter_name, got_param.parameter_name)
+            self.assertEqual(source_param.float_value, got_param.float_value)
+            self.assertEqual(source_param.str_value, got_param.str_value)
+            self.assertEqual(source_param.split_num, got_param.split_num)
+
+        self._database.execute(f"ALTER TABLE backtest.ml_parameters DELETE WHERE run_id == '{dt}'")

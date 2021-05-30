@@ -2,6 +2,7 @@ from readytofit.db.BaseDatabase import BaseDatabase
 from readytofit.db.CreatedMlModels import CreatedMlModels
 from readytofit.db.ExperimentInfo import ExperimentInfo
 from readytofit.db.MlTsValues import MlTsValues
+from readytofit.db.MlParameter import MlParameter
 from datetime import datetime
 from typing import List
 
@@ -75,6 +76,20 @@ class MLDatabaseManager:
         results = self.db.get_all(query)
         results = list(map(lambda x: MlTsValues(*x), results))
         return results
+
+    def get_ml_parameters(self, run_id: datetime) -> List[MlParameter]:
+
+        query = f""" 
+                    select * 
+                    from backtest.ml_parameters 
+                    where run_id == '{run_id}'
+                    """
+        results = self.db.get_all(query)
+        results = list(map(lambda x: MlParameter(*x), results))
+        return results
+
+    def insert_parameters(self, ml_paremeters: List[MlParameter], immediate_insert=True):
+        self.db.insert_row(ml_paremeters, table='ml_parameters', immediate_insert=immediate_insert)
 
     def insert_experiment(self, created_ml_model: CreatedMlModels, immediate_insert=True):
         self.db.insert_row([created_ml_model], table='created_ml_models', immediate_insert=immediate_insert)
