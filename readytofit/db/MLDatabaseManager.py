@@ -39,10 +39,10 @@ class MLDatabaseManager:
 
         exp_str = f"where exp_id == '{exp_id}'" if exp_id is not None else ''
         query = f"""
-        select run_id_full
+        select run_id_full, split_num
         from backtest.created_ml_models 
         {exp_str}
-        group by run_id_full;
+        group by run_id_full, split_num;
         """
 
         results = self.db.get_all(query)

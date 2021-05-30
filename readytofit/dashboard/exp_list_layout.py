@@ -3,7 +3,7 @@ import dash_html_components as html
 import dash_table as dtable
 from dash.dependencies import Input, Output
 from dash.exceptions import PreventUpdate
-from readytofit.dashboard.MLDashboardManager import MlDashboardManager
+from readytofit.dashboard.MLDashboardData import MlDashboardData
 from readytofit.db.CreatedMlModels import CreatedMlModels
 
 EXP_ID_TABLE = 'experiments-id'
@@ -64,7 +64,7 @@ def exp_layout():
             ]
 
 
-def exp_callback(app, ml_dashboard_manager: MlDashboardManager):
+def exp_callback(app, ml_dashboard_manager: MlDashboardData):
 
     @app.callback(Output(EXP_ID_TABLE, 'data'),
                   Output("loading-output-1", "children"),
@@ -72,6 +72,7 @@ def exp_callback(app, ml_dashboard_manager: MlDashboardManager):
                   [Input(UPDATE_RUNS_ID, 'n_clicks')])
     def update_experiments(n_clicks):
         runs = ml_dashboard_manager.get_exp_ids()
+        # print(runs)
         runs = sorted(runs, reverse=True,  key=lambda x: x.max_date)
         exp_ids = list(map(lambda x: x.exp_id, runs))
         runs = list(map(lambda x: x.to_dict(), runs))

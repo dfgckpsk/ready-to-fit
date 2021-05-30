@@ -1,8 +1,8 @@
-from readytofit.db.MLDatabaseManager import MLDatabaseManager
+from readytofit.db.MLDatabaseManager import MLDatabaseManager, List, MlTsValues
 from datetime import datetime
 
 
-class MlDashboardManager:
+class MlDashboardData:
 
     def __init__(self, database_manager: MLDatabaseManager):
         self.database_manager = database_manager
@@ -19,9 +19,9 @@ class MlDashboardManager:
             self.prev_experiment_output = experiments
         return self.prev_experiment_output
 
-    def get_ts_metrics(self, run_id: datetime):
+    def get_ts_metrics(self, run_id: datetime) -> List[MlTsValues]:
         ts_metrics = self.database_manager.get_ts_metrics(run_id)
-        metrics_names = list(map(lambda x: x.value_name, ts_metrics))
+        return ts_metrics
 
-    def get_run_id_by_exp(self, exp_id: str):
+    def get_run_id_by_exp(self, exp_id: str = None):
         return self.database_manager.get_run_id_by_exp(exp_id)

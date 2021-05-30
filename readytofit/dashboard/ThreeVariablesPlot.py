@@ -5,6 +5,8 @@ from dash.dependencies import Input, Output
 from dash.exceptions import PreventUpdate
 from readytofit.db.CreatedMlModels import CreatedMlModels
 from typing import List, Tuple
+from readytofit.dashboard.base.DashboardObject import DashboardObject, dash
+import plotly.graph_objs as go
 
 DRAWDOWN_PARAM_1 = 'drawdown-param-1'
 DRAWDOWN_PARAM_2 = 'drawdown-param-2'
@@ -14,12 +16,16 @@ DRAWDOWN_PLOT_2 = 'drawdown-plot-2'
 DRAWDOWN_PLOT_3 = 'drawdown-plot-3'
 DRAWDOWN_RUN_ID = 'drawdown-run-id'
 UPDATE_RUNS_ID = 'update-runs-id'
+FIGURE_ID = 'figure-id'
 
 
-class ThreeVariablesPlot:
+class ThreeVariablesPlot(DashboardObject):
 
-    def __init__(self):
-        pass
+    def __init__(self, app: dash.Dash):
+        DashboardObject.__init__(self, app)
+        self.callback_objects = [self._callback_update_data_id,
+                                 self._callback_update_plot_parameter_names,
+                                 self._callback_select_data_options]
 
     def layout(self):
 
@@ -32,45 +38,49 @@ class ThreeVariablesPlot:
                         type="circle",
                         children=html.Div(id="loading-output-3")
                     )]
-        layout += self._run_id_drawdown_layout()
-        layout += self._plot_parameters_layout()
-        return layout
+        parameters_layouts = self._layout_data_id_drawdown()
+        parameters_layouts += self._layout_plot_parameters()
+        figure_layout = self._layout_figure()
+        data_layout = html.Div([html.Div(figure_layout, style={'width': '70%', 'display': 'inline-block'}),
+                                html.Div(parameters_layouts, style={'width': '30%', 'display': 'inline-block'})],
+                               style={'width': '100%', 'display': 'inline-block'})
+        return [html.Div(layout), data_layout]
 
-    def callback(self, app):
-
-        self._callback_update_run_id(app)
-        self._callback_update_plot_parameter_names(app)
-        self._callback_select_experiment(app)
-
-    def _run_id_drawdown_layout(self):
+    def _layout_data_id_drawdown(self):
         return [html.H2('Run id'),
                 dcc.Dropdown(id=DRAWDOWN_RUN_ID,
-                             style={'width': '100%', 'display': 'inline-block'})]
+                             style={'width': '90%', 'display': 'inline-block'})]
 
-    def _plot_parameters_layout(self):
-        plot_parameters = ['line', 'dot']
+    def _layout_plot_parameters(self):
+        plot_parameters = ['line', 'markers']
         return [html.H2('parametersss'),
                 dcc.Dropdown(id=DRAWDOWN_PARAM_1,
-                             style={'width': '45%', 'display': 'inline-block'}),
+                             style={'width': '50%', 'display': 'inline-block'}),
                 dcc.Dropdown(id=DRAWDOWN_PLOT_1,
                              options=[{'label': i, 'value': i} for i in plot_parameters],
-                             style={'width': '45%', 'display': 'inline-block'}),
+                             value=plot_parameters[0],
+                             style={'width': '50%', 'display': 'inline-block'}),
                 dcc.Dropdown(id=DRAWDOWN_PARAM_2,
-                             style={'width': '45%', 'display': 'inline-block'}),
+                             style={'width': '50%', 'display': 'inline-block'}),
                 dcc.Dropdown(id=DRAWDOWN_PLOT_2,
                              options=[{'label': i, 'value': i} for i in plot_parameters],
-                             style={'width': '45%', 'display': 'inline-block'}),
+                             value=plot_parameters[0],
+                             style={'width': '50%', 'display': 'inline-block'}),
                 dcc.Dropdown(id=DRAWDOWN_PARAM_3,
-                             style={'width': '45%', 'display': 'inline-block'}),
+                             style={'width': '50%', 'display': 'inline-block'}),
                 dcc.Dropdown(id=DRAWDOWN_PLOT_3,
                              options=[{'label': i, 'value': i} for i in plot_parameters],
-                             style={'width': '45%', 'display': 'inline-block'})]
+                             value=plot_parameters[0],
+                             style={'width': '50%', 'display': 'inline-block'})]
 
-    def _callback_update_run_id(self, app):
+    def _layout_figure(self):
+        return [dcc.Graph(id=FIGURE_ID)]
+
+    def _callback_update_data_id(self, app):
         @app.callback(Output(DRAWDOWN_RUN_ID, 'options'),
                       Input(UPDATE_RUNS_ID, 'value'))
         def update_run_id(n_clicks):
-            run_ids = self._get_runs_list()
+            run_ids = self._get_data_id_list()
             run_ids = [{'label': i, 'value': i} for i in run_ids*3]
             return run_ids
 
@@ -79,24 +89,37 @@ class ThreeVariablesPlot:
                       Output(DRAWDOWN_PARAM_2, 'options'),
                       Output(DRAWDOWN_PARAM_3, 'options'),
                       [Input(DRAWDOWN_RUN_ID, 'value')])
-        def update_plot_parameter_names(run_id):
-            paremeter_names = self._get_plot_parameter_names()
-            paremeter_names = list(map(lambda x: [{'label': i, 'value': i} for i in x], paremeter_names))
-            return paremeter_names
+        def update_plot_parameter_names(data_id):
+            paremeter_names = self._get_parameter_names_for_plot(data_id)
+            paremeter_names = [{'label': i, 'value': i} for i in paremeter_names]
+            return paremeter_names, paremeter_names, paremeter_names
 
-    def _callback_select_experiment(self, app):
-        @app.callback(Output("loading-output-3", "children"),
+    def _callback_select_data_options(self, app):
+        @app.callback(Output('loading-output-3', 'children'),
+                      Output(FIGURE_ID, 'figure'),
                       Input(DRAWDOWN_PARAM_1, 'value'),
                       Input(DRAWDOWN_PARAM_2, 'value'),
-                      Input(DRAWDOWN_PARAM_3, 'value'))
-        def select_experiment(param_1, param_2, param_3):
-            print('params', param_1, param_2, param_3)
-            return True
+                      Input(DRAWDOWN_PARAM_3, 'value'),
+                      Input(DRAWDOWN_PLOT_1, 'value'),
+                      Input(DRAWDOWN_PLOT_2, 'value'),
+                      Input(DRAWDOWN_PLOT_3, 'value'))
+        def select_experiment(param_1, param_2, param_3, plot_type_1, plot_type_2, plot_type_3):
+            figure = self._update_figure(param_1,
+                                         param_2,
+                                         param_3,
+                                         plot_type_1,
+                                         plot_type_2,
+                                         plot_type_3)
+            if figure is None:
+                raise PreventUpdate
+            return True, figure
 
-    def _get_plot_parameter_names(self) -> Tuple[List[str], List[str], List[str]]:
-        return (['param11', 'param12', 'param13'],
-                ['param11', 'param12', 'param13'],
-                ['param11', 'param12', 'param13'])
+    def _get_parameter_names_for_plot(self, data_id: str) -> List[str]:
+        return ['param11', 'param12', 'param13']
 
-    def _get_runs_list(self) -> List[str]:
+    def _get_data_id_list(self) -> List[str]:
         return ['run_id1', 'run_id2', 'run_id3']
+
+    def _update_figure(self, param_1, param_2, param_3, plot_type_1, plot_type_2, plot_type_3) -> go.Figure:
+        # return go.Figure()
+        return None
