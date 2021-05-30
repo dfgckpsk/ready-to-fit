@@ -132,6 +132,7 @@ class ModelCreator:
 
     def _fill_meta(self, in_meta: dict, ml_data: MlData):
         in_meta['run_id'] = self.run_id
+        in_meta['run_id_full'] = self.run_id
         in_meta['exp_id'] = self.exp_id
         in_meta['config'] = str(clear_parameters_dict_string(self.parameters))
         in_meta['label_creator_id'] = str(self.label_creator) if self.label_creator is not None else None
@@ -171,6 +172,7 @@ class ModelCreator:
         meta = model.fit(new_ml_data)
         # if current_index is not None:
         #     meta['current_index'] = current_index.get_datetime()
+        meta['current_index'] = self.run_id
         meta['features_count'] = len(new_ml_data.feature_names)
         meta['data_length'] = len(new_ml_data)
         meta['seed'] = seed

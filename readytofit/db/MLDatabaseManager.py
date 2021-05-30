@@ -17,7 +17,7 @@ class MLDatabaseManager:
         query = f"""
         select * 
         from backtest.created_ml_models 
-        where run_id == '{run_id.strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]}';
+        where run_id_full == '{run_id.strftime('%Y-%m-%d %H:%M:%S.%f')}';
         """
 
         results = self.db.get_all(query)
@@ -35,13 +35,14 @@ class MLDatabaseManager:
         results = list(map(lambda x: CreatedMlModels(*x), results))
         return results
 
-    def get_run_id_by_exp(self, exp_id: str):
+    def get_run_id_by_exp(self, exp_id: str = None):
 
+        exp_str = f"where exp_id == '{exp_id}'" if exp_id is not None else ''
         query = f"""
-        select run_id
+        select run_id_full
         from backtest.created_ml_models 
-        where exp_id == '{exp_id}'
-        group by run_id;
+        {exp_str}
+        group by run_id_full;
         """
 
         results = self.db.get_all(query)
@@ -51,10 +52,10 @@ class MLDatabaseManager:
 
         query = f"""
         select exp_id,
-               count(distinct (run_id)) as uniq_count_runs,
-               count(run_id) as count_runs,
-               min(run_id) as min_date,
-               max(run_id) as max_date,
+               count(distinct (run_id_full)) as uniq_count_runs,
+               count(run_id_full) as count_runs,
+               min(run_id_full) as min_date,
+               max(run_id_full) as max_date,
                max(split_num) as max_split
         from backtest.created_ml_models
         group by exp_id;

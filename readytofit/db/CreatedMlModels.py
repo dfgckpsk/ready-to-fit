@@ -5,6 +5,7 @@ from datetime import datetime
 @dataclass
 class CreatedMlModels:
     exp_id: str
+    run_id_full: datetime
     run_id: datetime
     current_index: datetime
     config: str
@@ -68,7 +69,7 @@ class CreatedMlModels:
 
     @staticmethod
     def get_field_names():
-        return ['exp_id', 'run_id', 'current_index', 'config', 'model_id', 'seed',
+        return ['exp_id', 'run_id', 'run_id_full', 'current_index', 'config', 'model_id', 'seed',
 
                 'f1', 'f1_micro', 'f1_macro', 'f1_weighted', 'f1_avg_none', 'recall', 'recall_macro_avg',
                 'recall_weighted_avg', 'recall_avg_none', 'precision', 'precision_macro_avg',

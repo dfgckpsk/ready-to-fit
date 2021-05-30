@@ -1,5 +1,6 @@
 import random
 from .GridSearch import GridSearch
+from readytofit.tools.types import isfloat, isint
 
 
 class ParamType:
@@ -22,23 +23,11 @@ class RandomSearch(GridSearch):
         param_names = sorted(self.param_grid)
         for param in param_names:
             type = ParamType.STR
-            if all(map(lambda x: self.isfloat(x), self.param_grid[param])):
+            if all(map(lambda x: isfloat(x), self.param_grid[param])):
                 type = ParamType.FLOAT
-            elif all(map(lambda x: self.isint(x), self.param_grid[param])):
+            elif all(map(lambda x: isint(x), self.param_grid[param])):
                 type = ParamType.INT
             self.just_digits[param] = type
-
-    @staticmethod
-    def isfloat(x):
-        if type(x) == float:
-            return True
-        return False
-
-    @staticmethod
-    def isint(x):
-        if type(x) == int:
-            return True
-        return False
 
     def get_combinations(self):
 
