@@ -14,11 +14,11 @@ class UpdateTable(DashboardObject):
     def __init__(self, app: dash.Dash):
         DashboardObject.__init__(self, app)
         self.callback_objects.append(self._callback)
-        self.experiements_layout_columns = []
+        self.layout_columns = []
         self.title = 'title'
 
     def layout(self):
-        experiements_layout_columns = list(map(lambda x: {'name': x, 'id': x}, self.experiements_layout_columns))
+        layout_columns = list(map(lambda x: {'name': x, 'id': x}, self.layout_columns))
         return [html.H2(self.title),
         html.Button('Update', id=UPDATE_RUNS_ID, n_clicks=0),
         dcc.Loading(
@@ -27,7 +27,7 @@ class UpdateTable(DashboardObject):
             children=dtable.DataTable(id=EXP_ID_TABLE,
                          row_selectable=False,
                          editable=False,
-                         columns=experiements_layout_columns,
+                         columns=layout_columns,
                          page_size=12,
                          style_cell={'whiteSpace': 'normal',
                                      'height': 'auto'})

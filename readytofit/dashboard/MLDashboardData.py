@@ -25,3 +25,6 @@ class MlDashboardData:
 
     def get_run_id_by_exp(self, exp_id: str = None):
         return self.database_manager.get_run_id_by_exp(exp_id)
+
+    def get_run_id_in_ts_metrics(self):
+        return self.database_manager.get_run_id_in_ts_metrics()

@@ -5,6 +5,7 @@ from dash.exceptions import PreventUpdate
 from typing import List
 from readytofit.dashboard.base.DashboardObject import DashboardObject, dash
 import plotly.graph_objs as go
+import time
 
 DRAWDOWN_PARAM_1 = 'drawdown-param-1'
 DRAWDOWN_PARAM_2 = 'drawdown-param-2'
@@ -27,6 +28,9 @@ class ThreeVariablesPlot(DashboardObject):
                                  self._callback_update_plot_parameter_names,
                                  self._callback_select_data_options]
         self.data_id = None
+        self.data = []
+        self.prev_data_id = None
+        self.data_already_updated = False
 
     def layout(self):
 
@@ -55,8 +59,7 @@ class ThreeVariablesPlot(DashboardObject):
 
     def _layout_plot_parameters(self):
         plot_parameters = ['line', 'markers']
-        return [html.H2('parametersss'),
-                dcc.Dropdown(id=DRAWDOWN_PARAM_1,
+        drawdowns_layout = [dcc.Dropdown(id=DRAWDOWN_PARAM_1,
                              style={'width': '90%', 'display': 'inline-block'}),
                 dcc.Dropdown(id=DRAWDOWN_PLOT_1,
                              options=[{'label': i, 'value': i} for i in plot_parameters],
@@ -78,6 +81,12 @@ class ThreeVariablesPlot(DashboardObject):
                               options=[{'label': i, 'value': i} for i in CHECKLIST_OPTIONS],
                               labelStyle={'width': '90%', 'display': 'inline-block'})
                 ]
+        return [html.H4('settings'),
+                dcc.Loading(
+                    id="loading-5",
+                    type="circle",
+                    children=html.Div(drawdowns_layout))]
+
 
     def _layout_figure(self):
         return [dcc.Loading(
@@ -113,7 +122,14 @@ class ThreeVariablesPlot(DashboardObject):
                       Input(DRAWDOWN_PLOT_3, 'value'),
                       Input(DRAWDOWN_RUN_ID, 'value'),
                       Input(SECONDARY_CHECKLIST_ID, 'value'))
-        def select_experiment(param_1, param_2, param_3, plot_type_1, plot_type_2, plot_type_3, data_id, selected_secondary):
+        def select_experiment(param_1,
+                              param_2,
+                              param_3,
+                              plot_type_1,
+                              plot_type_2,
+                              plot_type_3,
+                              data_id,
+                              selected_secondary):
             figure = self._update_figure(param_1,
                                          param_2,
                                          param_3,
@@ -132,5 +148,43 @@ class ThreeVariablesPlot(DashboardObject):
     def _get_data_id_list(self) -> List[str]:
         return ['run_id1', 'run_id2', 'run_id3']
 
-    def _update_figure(self, param_1, param_2, param_3, plot_type_1, plot_type_2, plot_type_3, data_id, selected_secondary) -> go.Figure:
+    def _get_points(self, param_name, plot_type, secondary=False) -> go.Scatter:
         return None
+
+    def _update_data_callback(self, data_id):
+        pass
+
+    def _update_data(self, data_id):
+        if data_id != self.prev_data_id and not self.data_already_updated:
+            self.data = None
+            self.data_already_updated = True
+            self.prev_data_id = data_id
+            self._update_data_callback(data_id)
+            self.data_already_updated = False
+        while self.data_already_updated:
+            time.sleep(0.5)
+
+    def _update_figure(self,
+                       param_1,
+                       param_2,
+                       param_3,
+                       plot_type_1,
+                       plot_type_2,
+                       plot_type_3,
+                       data_id,
+                       selected_secondary) -> go.Figure:
+
+        self._update_data(data_id)
+        data = []
+        for param, plot_type, sec_option_names in zip([param_1, param_2, param_3],
+                                                      [plot_type_1, plot_type_2, plot_type_3],
+                                                      CHECKLIST_OPTIONS):
+            if param is not None and plot_type is not None:
+                is_secondary_plot = selected_secondary is not None and sec_option_names in selected_secondary
+                points = self._get_points(param, plot_type, is_secondary_plot)
+                if points is not None:
+                    data.append(points)
+        layout = go.Layout(yaxis=dict(),
+                           yaxis2=dict(overlaying='y',
+                                       side='right'))
+        return go.Figure(data=data, layout=layout)

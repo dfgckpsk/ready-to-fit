@@ -48,6 +48,17 @@ class MLDatabaseManager:
         results = self.db.get_all(query)
         return results
 
+    def get_run_id_in_ts_metrics(self):
+
+        query = f"""
+        select run_id, split_num
+        from backtest.ml_ts_values 
+        group by run_id, split_num;
+        """
+
+        results = self.db.get_all(query)
+        return results
+
     def get_exp_ids(self) -> List[ExperimentInfo]:
 
         query = f"""

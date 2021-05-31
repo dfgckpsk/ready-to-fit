@@ -8,12 +8,10 @@ class ExperimentsUpdateTable(UpdateTable):
         UpdateTable.__init__(self, app)
         self.ml_dashboard_manager = ml_dashboard_manager
         self.title = 'Experiments'
-        self.experiements_layout_columns = ['exp_id', 'uniq_count_runs', 'count_runs', 'min_date', 'max_date', 'max_split']
+        self.layout_columns = ['exp_id', 'uniq_count_runs', 'count_runs', 'min_date', 'max_date', 'max_split']
 
     def _get_table(self) -> List[dict]:
         runs = self.ml_dashboard_manager.get_exp_ids()
-        # print(runs)
         runs = sorted(runs, reverse=True, key=lambda x: x.max_date)
-        exp_ids = list(map(lambda x: x.exp_id, runs))
         runs = list(map(lambda x: x.to_dict(), runs))
         return runs
