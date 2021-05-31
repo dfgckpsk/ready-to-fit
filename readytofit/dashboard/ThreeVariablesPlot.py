@@ -13,8 +13,10 @@ DRAWDOWN_PLOT_1 = 'drawdown-plot-1'
 DRAWDOWN_PLOT_2 = 'drawdown-plot-2'
 DRAWDOWN_PLOT_3 = 'drawdown-plot-3'
 DRAWDOWN_RUN_ID = 'drawdown-run-id'
+SECONDARY_CHECKLIST_ID = 'secondary-checklist-id'
 UPDATE_RUNS_ID = 'update-runs-id'
 FIGURE_ID = 'figure-id'
+CHECKLIST_OPTIONS = ['1st secondary', '2nd secondary', '3d secondary']
 
 
 class ThreeVariablesPlot(DashboardObject):
@@ -31,7 +33,7 @@ class ThreeVariablesPlot(DashboardObject):
         layout = []
 
         layout += [html.H2('ThreeVariablesPlot'),
-                   html.Button('Update runs', id=UPDATE_RUNS_ID, n_clicks=0) ]
+                   html.Button('Update runs', id=UPDATE_RUNS_ID, n_clicks=0)]
         parameters_layouts = self._layout_data_id_drawdown()
         parameters_layouts += self._layout_plot_parameters()
         figure_layout = self._layout_figure()
@@ -71,7 +73,11 @@ class ThreeVariablesPlot(DashboardObject):
                 dcc.Dropdown(id=DRAWDOWN_PLOT_3,
                              options=[{'label': i, 'value': i} for i in plot_parameters],
                              value=plot_parameters[0],
-                             style={'width': '90%', 'display': 'inline-block'})]
+                             style={'width': '90%', 'display': 'inline-block'}),
+                dcc.Checklist(id=SECONDARY_CHECKLIST_ID,
+                              options=[{'label': i, 'value': i} for i in CHECKLIST_OPTIONS],
+                              labelStyle={'width': '90%', 'display': 'inline-block'})
+                ]
 
     def _layout_figure(self):
         return [dcc.Loading(
@@ -105,16 +111,17 @@ class ThreeVariablesPlot(DashboardObject):
                       Input(DRAWDOWN_PLOT_1, 'value'),
                       Input(DRAWDOWN_PLOT_2, 'value'),
                       Input(DRAWDOWN_PLOT_3, 'value'),
-                      Input(DRAWDOWN_RUN_ID, 'value'))
-        def select_experiment(param_1, param_2, param_3, plot_type_1, plot_type_2, plot_type_3, data_id):
-            print('select_experiment', param_1, param_2, param_3, plot_type_1, plot_type_2, plot_type_3)
+                      Input(DRAWDOWN_RUN_ID, 'value'),
+                      Input(SECONDARY_CHECKLIST_ID, 'value'))
+        def select_experiment(param_1, param_2, param_3, plot_type_1, plot_type_2, plot_type_3, data_id, selected_secondary):
             figure = self._update_figure(param_1,
                                          param_2,
                                          param_3,
                                          plot_type_1,
                                          plot_type_2,
                                          plot_type_3,
-                                         data_id)
+                                         data_id,
+                                         selected_secondary)
             if figure is None:
                 raise PreventUpdate
             return figure
@@ -125,5 +132,5 @@ class ThreeVariablesPlot(DashboardObject):
     def _get_data_id_list(self) -> List[str]:
         return ['run_id1', 'run_id2', 'run_id3']
 
-    def _update_figure(self, param_1, param_2, param_3, plot_type_1, plot_type_2, plot_type_3, data_id) -> go.Figure:
+    def _update_figure(self, param_1, param_2, param_3, plot_type_1, plot_type_2, plot_type_3, data_id, selected_secondary) -> go.Figure:
         return None
