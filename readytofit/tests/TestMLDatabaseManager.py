@@ -1,5 +1,6 @@
 from unittest import TestCase
 from readytofit.db.MLDatabaseManager import MLDatabaseManager, MlTsValues, CreatedMlModels, MlParameter
+from readytofit.db.MlParameter import MlParameterType
 from readytofit.db.clickhouse import Clickhouse
 import datetime
 import time
@@ -76,8 +77,8 @@ class TestMLDatabaseManager(TestCase):
         ml_model_manager = MLDatabaseManager(self._database)
 
         dt = datetime.datetime.utcnow() - datetime.timedelta(days=2000)
-        ml_parameter_1 = MlParameter(dt, 'param1', str_value='fsdf')
-        ml_parameter_2 = MlParameter(dt, 'param2', float_value=56.5, split_num=1)
+        ml_parameter_1 = MlParameter(dt, MlParameterType.Model, 'param1', str_value='fsdf')
+        ml_parameter_2 = MlParameter(dt, MlParameterType.Data, 'param2', float_value=56.5, split_num=1)
         ml_model_manager.insert_parameters([ml_parameter_1, ml_parameter_2])
 
         got_ml_parameters = ml_model_manager.get_ml_parameters(dt)

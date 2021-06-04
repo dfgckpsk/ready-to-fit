@@ -1,5 +1,6 @@
 import unittest
 from sklearn.datasets import load_iris
+from readytofit.tests.TestDataSource import TestDataSource
 from readytofit.cv.SLCV import SLCV
 from readytofit.data.FeatureCreator import FeatureCreator
 from readytofit.data.LabelCreator import LabelCreator
@@ -57,13 +58,14 @@ class TestModel(unittest.TestCase):
                                      'lgbm',
                                      label_creator,
                                      feature_creators,
+                                     data_source=TestDataSource(run_id, ml_database_manager=ml_model_manager),
                                      parameters={'objective': 'multiclass',
                                                  'num_class': 3,
                                                  'metric': 'multi_logloss',
                                                  'num_iterations': 1},
                                      ml_database_manager=ml_model_manager,
                                      run_id=run_id)
-        model_creator.train(self._ml_data)
+        model_creator.train()
 
         results = ml_model_manager.get_run_result(run_id)
         print(results)
@@ -78,6 +80,7 @@ class TestModel(unittest.TestCase):
                                      'lgbm',
                                      label_creator,
                                      feature_creators,
+                                     data_source=TestDataSource(run_id, ml_database_manager=ml_model_manager),
                                      metrics=[SLMetric('accuracy')],
                                      parameters={'objective': 'multiclass',
                                                  'num_class': 3,
@@ -85,7 +88,7 @@ class TestModel(unittest.TestCase):
                                                  'num_iterations': 1},
                                      ml_database_manager=ml_model_manager,
                                      run_id=run_id)
-        model_creator.validation(self._ml_data, SLCV('kfold'))
+        model_creator.validation(SLCV('kfold'))
 
         results = ml_model_manager.get_run_result(run_id)
         assert len(results) == 5
@@ -93,13 +96,15 @@ class TestModel(unittest.TestCase):
     def test_model_creator_validation_sl(self):
         feature_creators = [FeatureCreator()]
         label_creator = LabelCreator()
+        run_id = datetime.utcnow()
         model_creator = ModelCreator('test_model_creator_validation',
                                      'slmodel',
                                      label_creator,
                                      feature_creators,
+                                     data_source=TestDataSource(run_id),
                                      metrics=[SLMetric('accuracy')],
                                      parameters={'sl_model_name': 'decision_tree_classifier'})
-        model_creator.validation(self._ml_data, SLCV('kfold'))
+        model_creator.validation(SLCV('kfold'))
 
     def test_label_creator(self):
         append_value = 3

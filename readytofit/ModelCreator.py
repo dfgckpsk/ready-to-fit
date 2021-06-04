@@ -1,15 +1,16 @@
 from readytofit.cv.CVBase import CVBase
+from readytofit.data.DataSource import DataSource
 from readytofit.data.FeatureCreator import FeatureCreator
 from readytofit.data.LabelCreator import LabelCreator
 from readytofit.data.MlData import MlData
 from readytofit.data.MlDataFactory import MlDataFactory
 from readytofit.db.CreatedMlModels import CreatedMlModels
-from readytofit.db.MLDatabaseManager import MLDatabaseManager, MlTsValues, MlParameter
+from readytofit.db.MLDatabaseManager import MLDatabaseManager, MlTsValues
 from readytofit.metric.MetricBase import MetricBase
 from readytofit.models.ModelFactory import ModelFactory
 from typing import List, Optional
 from readytofit.tools import logged
-from readytofit.tools.types import isdigit
+from readytofit.db.MlParameterFactory import MLParameterFactory, MlParameterType
 
 from datetime import datetime
 import numpy as np
@@ -37,6 +38,7 @@ class ModelCreator:
                  model_name: str,
                  label_creator: LabelCreator,
                  feature_creators: List[FeatureCreator],
+                 data_source: DataSource,
                  metrics: Optional[List[MetricBase]] = None,
                  parameters: dict = None,
                  ml_database_manager: MLDatabaseManager = None,
@@ -45,6 +47,7 @@ class ModelCreator:
         self.label_creator = label_creator
         self.feature_creators = feature_creators
         self.metrics = metrics
+        self.data_source = data_source
         self.parameters = parameters
         self.exp_id = exp_id
         self.ml_database_manager = ml_database_manager
@@ -54,7 +57,8 @@ class ModelCreator:
         if self.run_id is None:
             self.run_id = datetime.utcnow()
 
-    def train(self, ml_data: MlData):
+    def train(self):
+        ml_data = self.data_source.generate_data()
         try:
             model, meta, _ = self._train(ml_data)
             self._log_meta(meta)
@@ -63,9 +67,10 @@ class ModelCreator:
             self._error(e)
             return None, None
 
-    def validation(self, ml_data: MlData, cv: CVBase, return_models: bool = False):
+    def validation(self, cv: CVBase, return_models: bool = False):
         split_num = 0
         models = []
+        ml_data = self.data_source.generate_data()
         for train_indexes, test_indexes in cv.split(ml_data):
             train_data = MlDataFactory().ml_data_from_ml_data(ml_data,
                                                               train_indexes)
@@ -135,6 +140,7 @@ class ModelCreator:
         in_meta['run_id_full'] = self.run_id
         in_meta['exp_id'] = self.exp_id
         in_meta['config'] = str(clear_parameters_dict_string(self.parameters))
+        in_meta['data_source_id'] = str(self.data_source.__class__.__name__)
         in_meta['label_creator_id'] = str(self.label_creator) if self.label_creator is not None else None
         in_meta['label_names'] = ml_data.label_names if ml_data.label_names is not None else []
         if in_meta['label_names'] is None:
@@ -150,18 +156,7 @@ class ModelCreator:
     def _log_parameters(self, parameters: dict, split_num: int = None):
 
         if self.ml_database_manager is not None:
-            ml_parameters = []
-            for key in parameters:
-                value = parameters.get(key)
-                float_value = value if isdigit(value) else None
-                str_value = value if not isdigit(value) else None
-                ml_parameter = MlParameter(run_id=self.run_id,
-                                           parameter_name=key,
-                                           split_num=split_num,
-                                           float_value=float_value,
-                                           str_value=str_value)
-                ml_parameters.append(ml_parameter)
-
+            ml_parameters = MLParameterFactory.from_dict(parameters, self.run_id, MlParameterType.Model, split_num)
             self.ml_database_manager.insert_parameters(ml_parameters)
 
     def _train(self, ml_data: MlData, split_num: int = None):

@@ -48,6 +48,7 @@ class CreatedMlModels:
     mae_train: float = None
     seed: int = None
 
+    data_source_id: str = None
     label_creator_id: str = None
     feature_creator_ids: list = field(default_factory=list)
     data_length: int = None
@@ -69,7 +70,7 @@ class CreatedMlModels:
 
     @staticmethod
     def get_field_names():
-        return ['exp_id', 'run_id', 'run_id_full', 'current_index', 'config', 'model_id', 'seed',
+        return ['exp_id', 'run_id', 'run_id_full', 'current_index', 'config', 'model_id',
 
                 'f1', 'f1_micro', 'f1_macro', 'f1_weighted', 'f1_avg_none', 'recall', 'recall_macro_avg',
                 'recall_weighted_avg', 'recall_avg_none', 'precision', 'precision_macro_avg',
@@ -80,8 +81,8 @@ class CreatedMlModels:
                 'precision_train', 'precision_macro_avg_train', 'precision_weighted_avg_train',
                 'precision_avg_none_train', 'accuracy_train', 'mae_train', 'mse_train',
 
-                'label_creator_id', 'feature_creator_ids', 'data_length', 'features_count', 'split_num', 'label_names',
-                'label_count_train', 'label_count_test']
+                'seed', 'data_source_id', 'label_creator_id', 'feature_creator_ids', 'data_length', 'features_count',
+                'split_num', 'label_names', 'label_count_train', 'label_count_test']
 
     @staticmethod
     def from_meta(in_meta: dict):
