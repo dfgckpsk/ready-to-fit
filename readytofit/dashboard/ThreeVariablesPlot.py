@@ -22,7 +22,7 @@ CHECKLIST_OPTIONS = ['1st secondary', '2nd secondary', '3d secondary']
 
 class ThreeVariablesPlot(DashboardObject):
 
-    def __init__(self, app: dash.Dash):
+    def __init__(self, app: dash.Dash, title: str = 'ThreeVariablesPlot'):
         DashboardObject.__init__(self, app)
         self.callback_objects = [self._callback_update_data_id,
                                  self._callback_update_plot_parameter_names,
@@ -31,12 +31,13 @@ class ThreeVariablesPlot(DashboardObject):
         self.data = []
         self.prev_data_id = None
         self.data_already_updated = False
+        self.title = title
 
     def layout(self):
 
         layout = []
 
-        layout += [html.H2('ThreeVariablesPlot'),
+        layout += [html.H2(self.title),
                    html.Button('Update runs', id=UPDATE_RUNS_ID, n_clicks=0)]
         parameters_layouts = self._layout_data_id_drawdown()
         parameters_layouts += self._layout_plot_parameters()
