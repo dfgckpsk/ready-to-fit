@@ -28,7 +28,7 @@ CHECKLIST_OPTIONS = ['1 secondary',
                      '5 secondary']
 
 
-class ThreeVariablesPlot(DashboardObject):
+class FiveVariablesPlot(DashboardObject):
 
     def __init__(self, app: dash.Dash, title: str = 'ThreeVariablesPlot'):
         DashboardObject.__init__(self, app)

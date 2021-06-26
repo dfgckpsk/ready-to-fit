@@ -1,12 +1,12 @@
-from .FiveVariablesPlot import ThreeVariablesPlot, go, dash, List
+from .FiveVariablesPlot import FiveVariablesPlot, go, dash, List
 from readytofit.dashboard.MLDashboardData import MlDashboardData
 import datetime
 
 
-class MLMetricsThreeVariablesPlot(ThreeVariablesPlot):
+class MLMetricsThreeVariablesPlot(FiveVariablesPlot):
 
     def __init__(self, app: dash.Dash, ml_dashboard_manager: MlDashboardData):
-        ThreeVariablesPlot.__init__(self, app)
+        FiveVariablesPlot.__init__(self, app)
         self.ml_dashboard_manager = ml_dashboard_manager
 
     def _get_points(self, param_name, plot_type, secondary=False) -> go.Scatter:
