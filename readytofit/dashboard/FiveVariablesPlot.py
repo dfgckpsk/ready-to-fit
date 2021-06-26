@@ -10,14 +10,22 @@ import time
 DRAWDOWN_PARAM_1 = 'drawdown-param-1'
 DRAWDOWN_PARAM_2 = 'drawdown-param-2'
 DRAWDOWN_PARAM_3 = 'drawdown-param-3'
+DRAWDOWN_PARAM_4 = 'drawdown-param-4'
+DRAWDOWN_PARAM_5 = 'drawdown-param-5'
 DRAWDOWN_PLOT_1 = 'drawdown-plot-1'
 DRAWDOWN_PLOT_2 = 'drawdown-plot-2'
 DRAWDOWN_PLOT_3 = 'drawdown-plot-3'
+DRAWDOWN_PLOT_4 = 'drawdown-plot-4'
+DRAWDOWN_PLOT_5 = 'drawdown-plot-5'
 DRAWDOWN_RUN_ID = 'drawdown-run-id'
 SECONDARY_CHECKLIST_ID = 'secondary-checklist-id'
 UPDATE_RUNS_ID = 'update-runs-id'
 FIGURE_ID = 'figure-id'
-CHECKLIST_OPTIONS = ['1st secondary', '2nd secondary', '3d secondary']
+CHECKLIST_OPTIONS = ['1 secondary',
+                     '2 secondary',
+                     '3 secondary',
+                     '4 secondary',
+                     '5 secondary']
 
 
 class ThreeVariablesPlot(DashboardObject):
@@ -42,8 +50,8 @@ class ThreeVariablesPlot(DashboardObject):
         parameters_layouts = self._layout_data_id_drawdown()
         parameters_layouts += self._layout_plot_parameters()
         figure_layout = self._layout_figure()
-        data_layout = html.Div([html.Div(figure_layout, style={'width': '70%', 'display': 'inline-block'}),
-                                html.Div(parameters_layouts, style={'width': '30%',
+        data_layout = html.Div([html.Div(figure_layout, style={'width': '80%', 'display': 'inline-block'}),
+                                html.Div(parameters_layouts, style={'width': '20%',
                                                                     'display': 'inline-block',
                                                                     'marginBottom': 100})],
                                style={'width': '100%', 'display': 'inline-block'})
@@ -66,18 +74,35 @@ class ThreeVariablesPlot(DashboardObject):
                              options=[{'label': i, 'value': i} for i in plot_parameters],
                              value=plot_parameters[0],
                              style={'width': '90%', 'display': 'inline-block'}),
+
                 dcc.Dropdown(id=DRAWDOWN_PARAM_2,
                              style={'width': '90%', 'display': 'inline-block'}),
                 dcc.Dropdown(id=DRAWDOWN_PLOT_2,
                              options=[{'label': i, 'value': i} for i in plot_parameters],
                              value=plot_parameters[0],
                              style={'width': '90%', 'display': 'inline-block'}),
+
                 dcc.Dropdown(id=DRAWDOWN_PARAM_3,
                              style={'width': '90%', 'display': 'inline-block'}),
                 dcc.Dropdown(id=DRAWDOWN_PLOT_3,
                              options=[{'label': i, 'value': i} for i in plot_parameters],
                              value=plot_parameters[0],
                              style={'width': '90%', 'display': 'inline-block'}),
+
+                dcc.Dropdown(id=DRAWDOWN_PARAM_4,
+                             style={'width': '90%', 'display': 'inline-block'}),
+                dcc.Dropdown(id=DRAWDOWN_PLOT_4,
+                             options=[{'label': i, 'value': i} for i in plot_parameters],
+                             value=plot_parameters[0],
+                             style={'width': '90%', 'display': 'inline-block'}),
+
+                dcc.Dropdown(id=DRAWDOWN_PARAM_5,
+                             style={'width': '90%', 'display': 'inline-block'}),
+                dcc.Dropdown(id=DRAWDOWN_PLOT_5,
+                             options=[{'label': i, 'value': i} for i in plot_parameters],
+                             value=plot_parameters[0],
+                             style={'width': '90%', 'display': 'inline-block'}),
+
                 dcc.Checklist(id=SECONDARY_CHECKLIST_ID,
                               options=[{'label': i, 'value': i} for i in CHECKLIST_OPTIONS],
                               labelStyle={'width': '90%', 'display': 'inline-block'})
@@ -88,12 +113,11 @@ class ThreeVariablesPlot(DashboardObject):
                     type="circle",
                     children=html.Div(drawdowns_layout))]
 
-
     def _layout_figure(self):
         return [dcc.Loading(
                         id="loading-3",
                         type="circle",
-                        children=dcc.Graph(id=FIGURE_ID))]
+                        children=dcc.Graph(id=FIGURE_ID, style={'height': '90vh'}))]
 
     def _callback_update_data_id(self, app):
         @app.callback(Output(DRAWDOWN_RUN_ID, 'options'),
@@ -107,36 +131,50 @@ class ThreeVariablesPlot(DashboardObject):
         @app.callback(Output(DRAWDOWN_PARAM_1, 'options'),
                       Output(DRAWDOWN_PARAM_2, 'options'),
                       Output(DRAWDOWN_PARAM_3, 'options'),
+                      Output(DRAWDOWN_PARAM_4, 'options'),
+                      Output(DRAWDOWN_PARAM_5, 'options'),
                       [Input(DRAWDOWN_RUN_ID, 'value')])
         def update_plot_parameter_names(data_id):
             paremeter_names = self._get_parameter_names_for_plot(data_id)
             paremeter_names = [{'label': i, 'value': i} for i in paremeter_names]
-            return paremeter_names, paremeter_names, paremeter_names
+            return paremeter_names, paremeter_names, paremeter_names, paremeter_names, paremeter_names
 
     def _callback_select_data_options(self, app):
         @app.callback(Output(FIGURE_ID, 'figure'),
                       Input(DRAWDOWN_PARAM_1, 'value'),
                       Input(DRAWDOWN_PARAM_2, 'value'),
                       Input(DRAWDOWN_PARAM_3, 'value'),
+                      Input(DRAWDOWN_PARAM_4, 'value'),
+                      Input(DRAWDOWN_PARAM_5, 'value'),
                       Input(DRAWDOWN_PLOT_1, 'value'),
                       Input(DRAWDOWN_PLOT_2, 'value'),
                       Input(DRAWDOWN_PLOT_3, 'value'),
+                      Input(DRAWDOWN_PLOT_4, 'value'),
+                      Input(DRAWDOWN_PLOT_5, 'value'),
                       Input(DRAWDOWN_RUN_ID, 'value'),
                       Input(SECONDARY_CHECKLIST_ID, 'value'))
         def select_experiment(param_1,
                               param_2,
                               param_3,
+                              param_4,
+                              param_5,
                               plot_type_1,
                               plot_type_2,
                               plot_type_3,
+                              plot_type_4,
+                              plot_type_5,
                               data_id,
                               selected_secondary):
             figure = self._update_figure(param_1,
                                          param_2,
                                          param_3,
+                                         param_4,
+                                         param_5,
                                          plot_type_1,
                                          plot_type_2,
                                          plot_type_3,
+                                         plot_type_4,
+                                         plot_type_5,
                                          data_id,
                                          selected_secondary)
             if figure is None:
@@ -169,16 +207,20 @@ class ThreeVariablesPlot(DashboardObject):
                        param_1,
                        param_2,
                        param_3,
+                       param_4,
+                       param_5,
                        plot_type_1,
                        plot_type_2,
                        plot_type_3,
+                       plot_type_4,
+                       plot_type_5,
                        data_id,
                        selected_secondary) -> go.Figure:
 
         self._update_data(data_id)
         data = []
-        for param, plot_type, sec_option_names in zip([param_1, param_2, param_3],
-                                                      [plot_type_1, plot_type_2, plot_type_3],
+        for param, plot_type, sec_option_names in zip([param_1, param_2, param_3, param_4, param_5],
+                                                      [plot_type_1, plot_type_2, plot_type_3, plot_type_4, plot_type_5],
                                                       CHECKLIST_OPTIONS):
             if param is not None and plot_type is not None:
                 is_secondary_plot = selected_secondary is not None and sec_option_names in selected_secondary

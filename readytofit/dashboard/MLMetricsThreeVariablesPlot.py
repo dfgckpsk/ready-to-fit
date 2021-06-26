@@ -1,4 +1,4 @@
-from .ThreeVariablesPlot import ThreeVariablesPlot, go, dash, List
+from .FiveVariablesPlot import ThreeVariablesPlot, go, dash, List
 from readytofit.dashboard.MLDashboardData import MlDashboardData
 import datetime
 
