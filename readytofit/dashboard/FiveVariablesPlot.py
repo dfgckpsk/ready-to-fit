@@ -36,7 +36,7 @@ class FiveVariablesPlot(DashboardObject):
                                  self._callback_update_plot_parameter_names,
                                  self._callback_select_data_options]
         self.data_id = None
-        self.data = []
+        self.data = {}
         self.prev_data_id = None
         self.data_already_updated = False
         self.title = title
@@ -53,7 +53,7 @@ class FiveVariablesPlot(DashboardObject):
         data_layout = html.Div([html.Div(figure_layout, style={'width': '80%', 'display': 'inline-block'}),
                                 html.Div(parameters_layouts, style={'width': '20%',
                                                                     'display': 'inline-block',
-                                                                    'marginBottom': 100})],
+                                                                    'vertical-align': 'top'})],
                                style={'width': '100%', 'display': 'inline-block'})
         return [html.Div(layout), data_layout]
 
@@ -68,44 +68,34 @@ class FiveVariablesPlot(DashboardObject):
 
     def _layout_plot_parameters(self):
         plot_parameters = ['line', 'markers']
-        drawdowns_layout = [dcc.Dropdown(id=DRAWDOWN_PARAM_1,
-                             style={'width': '90%', 'display': 'inline-block'}),
-                dcc.Dropdown(id=DRAWDOWN_PLOT_1,
-                             options=[{'label': i, 'value': i} for i in plot_parameters],
-                             value=plot_parameters[0],
-                             style={'width': '90%', 'display': 'inline-block'}),
+        drawdowns_layout = [dcc.Dropdown(id=DRAWDOWN_PARAM_1),
+                            dcc.Dropdown(id=DRAWDOWN_PLOT_1,
+                                         options=[{'label': i, 'value': i} for i in plot_parameters],
+                                         value=plot_parameters[0]),
 
-                dcc.Dropdown(id=DRAWDOWN_PARAM_2,
-                             style={'width': '90%', 'display': 'inline-block'}),
-                dcc.Dropdown(id=DRAWDOWN_PLOT_2,
-                             options=[{'label': i, 'value': i} for i in plot_parameters],
-                             value=plot_parameters[0],
-                             style={'width': '90%', 'display': 'inline-block'}),
+                            dcc.Dropdown(id=DRAWDOWN_PARAM_2),
+                            dcc.Dropdown(id=DRAWDOWN_PLOT_2,
+                                         options=[{'label': i, 'value': i} for i in plot_parameters],
+                                         value=plot_parameters[0]),
 
-                dcc.Dropdown(id=DRAWDOWN_PARAM_3,
-                             style={'width': '90%', 'display': 'inline-block'}),
-                dcc.Dropdown(id=DRAWDOWN_PLOT_3,
-                             options=[{'label': i, 'value': i} for i in plot_parameters],
-                             value=plot_parameters[0],
-                             style={'width': '90%', 'display': 'inline-block'}),
+                            dcc.Dropdown(id=DRAWDOWN_PARAM_3),
+                            dcc.Dropdown(id=DRAWDOWN_PLOT_3,
+                                         options=[{'label': i, 'value': i} for i in plot_parameters],
+                                         value=plot_parameters[0]),
 
-                dcc.Dropdown(id=DRAWDOWN_PARAM_4,
-                             style={'width': '90%', 'display': 'inline-block'}),
-                dcc.Dropdown(id=DRAWDOWN_PLOT_4,
-                             options=[{'label': i, 'value': i} for i in plot_parameters],
-                             value=plot_parameters[0],
-                             style={'width': '90%', 'display': 'inline-block'}),
+                            dcc.Dropdown(id=DRAWDOWN_PARAM_4),
+                            dcc.Dropdown(id=DRAWDOWN_PLOT_4,
+                                         options=[{'label': i, 'value': i} for i in plot_parameters],
+                                         value=plot_parameters[0]),
 
-                dcc.Dropdown(id=DRAWDOWN_PARAM_5,
-                             style={'width': '90%', 'display': 'inline-block'}),
-                dcc.Dropdown(id=DRAWDOWN_PLOT_5,
-                             options=[{'label': i, 'value': i} for i in plot_parameters],
-                             value=plot_parameters[0],
-                             style={'width': '90%', 'display': 'inline-block'}),
+                            dcc.Dropdown(id=DRAWDOWN_PARAM_5),
+                            dcc.Dropdown(id=DRAWDOWN_PLOT_5,
+                                         options=[{'label': i, 'value': i} for i in plot_parameters],
+                                         value=plot_parameters[0]),
 
-                dcc.Checklist(id=SECONDARY_CHECKLIST_ID,
-                              options=[{'label': i, 'value': i} for i in CHECKLIST_OPTIONS],
-                              labelStyle={'width': '90%', 'display': 'inline-block'})
+                            dcc.Checklist(id=SECONDARY_CHECKLIST_ID,
+                                          options=[{'label': i, 'value': i} for i in CHECKLIST_OPTIONS],
+                                          labelStyle={'width': '90%', 'display': 'inline-block'})
                 ]
         return [html.H4('settings'),
                 dcc.Loading(
@@ -229,5 +219,6 @@ class FiveVariablesPlot(DashboardObject):
                     data.append(points)
         layout = go.Layout(yaxis=dict(),
                            yaxis2=dict(overlaying='y',
-                                       side='right'))
+                                       side='right'),
+                           hovermode='closest')
         return go.Figure(data=data, layout=layout)
