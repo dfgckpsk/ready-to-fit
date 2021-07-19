@@ -1,4 +1,5 @@
 from readytofit.data.MlData import MlData
+import json
 
 
 class Model:
@@ -12,6 +13,8 @@ class Model:
         self.parameters = kwargs.get('parameters', {}).copy()
         self.random_batch = self.parameters.get('random_batch', True)
 
+        self.meta = {}
+
     def fit(self, ml_data: MlData):
 
         """
@@ -19,6 +22,7 @@ class Model:
         :param ml_data:
         :return:
         """
+        self.meta['feature_names'] = list(ml_data.feature_names)
 
     def predict(self, ml_data: MlData):
 
@@ -43,6 +47,9 @@ class Model:
         :param path:
         :return:
         """
+        path_ = path + '.meta'
+        with open(path_) as infile:
+            self.meta = json.load(infile)
 
     def dump(self, path, model_name):
 
@@ -52,6 +59,10 @@ class Model:
         :param model_name:
         :return:
         """
+        path_ = path + '/' + model_name + '.meta'
+        if len(self.meta) > 0:
+            with open(path_, "w") as outfile:
+                json.dump(self.meta, outfile, indent=4)
 
     def dump_checkpoint(self, path, model_name, step):
 
