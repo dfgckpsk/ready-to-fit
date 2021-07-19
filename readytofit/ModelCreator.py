@@ -1,7 +1,7 @@
 from readytofit.cv.CVBase import CVBase
 from readytofit.data.DataSource import DataSource
 from readytofit.data.FeatureCreator import FeatureCreator
-from readytofit.data.LabelCreator import LabelCreator
+from readytofit.data.LabelCreator import LabelCreator, LabelCreatorApplyType
 from readytofit.data.MlData import MlData
 from readytofit.data.MlDataFactory import MlDataFactory
 from readytofit.db.CreatedMlModels import CreatedMlModels
@@ -71,6 +71,8 @@ class ModelCreator:
         split_num = 0
         models = []
         ml_data = self.data_source.generate_data()
+        if self.label_creator.label_creator_apply_type == LabelCreatorApplyType.OnceOnAllData:
+            ml_data = self._prepare_labels(ml_data)
         for train_indexes, test_indexes in cv.split(ml_data):
             train_data = MlDataFactory().ml_data_from_ml_data(ml_data,
                                                               train_indexes)
@@ -93,6 +95,13 @@ class ModelCreator:
         if return_models:
             return models
 
+    def _prepare_labels(self, new_ml_data):
+        if self.label_creator is not None:
+            self.label_creator.run_id = self.run_id
+            self.label_creator.database = self.ml_database_manager
+            new_ml_data = self.label_creator.get(new_ml_data)
+        return new_ml_data
+
     def _prepare_data(self, ml_data: MlData, preparing_for_validation: bool, skip_label_creator: bool = False):
         new_ml_data = ml_data.__copy__()
         for featore_creator in list(filter(lambda x: not x.apply_after_label and
@@ -104,10 +113,8 @@ class ModelCreator:
             new_ml_data = featore_creator.apply(new_ml_data)
             self._debug(f'Applied {featore_creator}, data_len {len(new_ml_data)}. '
                         f'skip_label_creator={skip_label_creator}, feature len={len(new_ml_data.feature_names)}')
-        if self.label_creator is not None and not skip_label_creator:
-            self.label_creator.run_id = self.run_id
-            self.label_creator.database = self.ml_database_manager
-            new_ml_data = self.label_creator.get(new_ml_data)
+        if self.label_creator.label_creator_apply_type == LabelCreatorApplyType.BeforeTrain and not skip_label_creator:
+            new_ml_data = self._prepare_labels(new_ml_data)
         for featore_creator in list(filter(lambda x: x.apply_after_label and
                                                      (not x.use_just_for_train or x.use_just_for_train and
                                                       not preparing_for_validation),
