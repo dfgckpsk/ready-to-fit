@@ -55,7 +55,7 @@ class SLModel(Model):
 
         if self.model_name.lower() == 'pca':
             return self.model_object.components_
-        return self.model_object.predict(ml_data.get_features())
+        return self.model_object.predict(ml_data.get_features(feature=self.meta.get('feature_names')))
 
     def predict_proba(self, ml_data):
 
