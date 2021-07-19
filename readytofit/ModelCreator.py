@@ -114,9 +114,11 @@ class ModelCreator:
             featore_creator.run_id = self.run_id
             featore_creator.database = self.ml_database_manager
             new_ml_data = featore_creator.apply(new_ml_data)
-            self._debug(f'Applied {"" if not after_label else "after label"} {featore_creator}, '
+            print(f'Applied {"" if not after_label else "after label"} {featore_creator}, '
                         f'data_len {len(new_ml_data)}. '
-                        f'skip_label_creator={skip_label_creator}, feature len={len(new_ml_data.feature_names)}')
+                        f'skip_label_creator={skip_label_creator}, feature len={len(new_ml_data.feature_names)},'
+                  f'once_all_data={once_all_data}, after_label={after_label}, skip_label_creator={skip_label_creator},'
+                  f'featore_creator={featore_creator}')
 
     def _prepare_data(self, ml_data: MlData,
                       preparing_for_validation: bool,
