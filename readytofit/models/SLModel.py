@@ -79,7 +79,7 @@ class SLModel(Model):
         _joblib.dump(self.model_object, path + '/' + model_name + '.model')
 
     def load(self, path):
-
+        Model.load(self, path)
         self.model_object = _joblib.load(path)
 
     def __str__(self):
