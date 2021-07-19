@@ -119,7 +119,7 @@ class ModelCreator:
                         f'skip_label_creator={skip_label_creator}, feature len={len(new_ml_data.feature_names)},'
                   f'once_all_data={once_all_data}, after_label={after_label}, skip_label_creator={skip_label_creator},'
                   f'featore_creator={featore_creator}')
-            return new_ml_data
+        return new_ml_data
 
     def _prepare_data(self, ml_data: MlData,
                       preparing_for_validation: bool,
