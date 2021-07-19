@@ -2,20 +2,29 @@ from readytofit.data.MlData import MlData
 from readytofit.db.MlTsValues import MlTsValues
 from readytofit.db.MLDatabaseManager import MLDatabaseManager
 from readytofit.tools.logging import logged
+from readytofit.data.CreatorApplyType import CreatorApplyType
 
 
 @logged
 class FeatureCreator:
 
-    def __init__(self, apply_feature=None, to_column=None, apply_after_label=False, use_just_for_train=False):
+    def __init__(self, apply_feature=None, to_column=None, use_just_for_train=False, creator_apply_type: CreatorApplyType = CreatorApplyType.BeforeTrainBeforeLabel):
         self.apply_feature = apply_feature
         self.save_feature = to_column
-        self.apply_after_label = apply_after_label
         self.use_just_for_train = use_just_for_train
         if self.save_feature is None:
             self.save_feature = self.apply_feature
         self.run_id = None
         self.database: MLDatabaseManager = None
+        self.creator_apply_type = creator_apply_type
+
+    @property
+    def apply_after_label(self):
+        return self.creator_apply_type in (CreatorApplyType.BeforeTrainAfterLabel, CreatorApplyType.OnceOnAllDataAfterLabel)
+
+    @property
+    def once_all_data(self):
+        return self.creator_apply_type in (CreatorApplyType.OnceOnAllDataAfterLabel, CreatorApplyType.OnceOnAllDataBeforeLabel)
 
     def apply(self, ml_data: MlData):
         return ml_data

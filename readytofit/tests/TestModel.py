@@ -3,7 +3,7 @@ from sklearn.datasets import load_iris
 from readytofit.tests.TestDataSource import TestDataSource
 from readytofit.cv.SLCV import SLCV
 from readytofit.data.FeatureCreator import FeatureCreator
-from readytofit.data.LabelCreator import LabelCreator
+from readytofit.data.LabelCreator import LabelCreator, CreatorApplyType
 from readytofit.data.MlDataFactory import MlDataFactory
 from readytofit.db.MLDatabaseManager import MLDatabaseManager
 from readytofit.metric.SLMetric import SLMetric
@@ -51,7 +51,7 @@ class TestModel(unittest.TestCase):
 
     def test_model_creator(self):
         feature_creators = [FeatureCreator()]
-        label_creator = LabelCreator()
+        label_creator = LabelCreator(CreatorApplyType.BeforeTrain)
         ml_model_manager = MLDatabaseManager(self._database)
         run_id = datetime.utcnow()
         model_creator = ModelCreator('test_model_creator',
@@ -73,7 +73,7 @@ class TestModel(unittest.TestCase):
 
     def test_model_creator_validation(self):
         feature_creators = [FeatureCreator()]
-        label_creator = LabelCreator()
+        label_creator = LabelCreator(CreatorApplyType.BeforeTrain)
         ml_model_manager = MLDatabaseManager(self._database)
         run_id = datetime.utcnow()
         model_creator = ModelCreator('test_model_creator_validation',
@@ -95,7 +95,7 @@ class TestModel(unittest.TestCase):
 
     def test_model_creator_validation_sl(self):
         feature_creators = [FeatureCreator()]
-        label_creator = LabelCreator()
+        label_creator = LabelCreator(CreatorApplyType.BeforeTrain)
         run_id = datetime.utcnow()
         model_creator = ModelCreator('test_model_creator_validation',
                                      'slmodel',

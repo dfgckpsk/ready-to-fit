@@ -5,8 +5,8 @@ import numpy as np
 
 class UpsampleFC(FeatureCreator):
 
-    def __init__(self, apply_feature=None, to_column=None, apply_after_label=False, upsample_coef=1.0):
-        FeatureCreator.__init__(self, apply_feature, to_column, apply_after_label)
+    def __init__(self, apply_feature=None, to_column=None, upsample_coef=1.0):
+        FeatureCreator.__init__(self, apply_feature, to_column)
         self.upsample_coef = upsample_coef
 
     def apply(self, ml_data: MlData):

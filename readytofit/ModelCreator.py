@@ -1,7 +1,7 @@
 from readytofit.cv.CVBase import CVBase
 from readytofit.data.DataSource import DataSource
 from readytofit.data.FeatureCreator import FeatureCreator
-from readytofit.data.LabelCreator import LabelCreator, LabelCreatorApplyType
+from readytofit.data.LabelCreator import LabelCreator, CreatorApplyType
 from readytofit.data.MlData import MlData
 from readytofit.data.MlDataFactory import MlDataFactory
 from readytofit.db.CreatedMlModels import CreatedMlModels
@@ -71,8 +71,7 @@ class ModelCreator:
         split_num = 0
         models = []
         ml_data = self.data_source.generate_data()
-        if self.label_creator.label_creator_apply_type == LabelCreatorApplyType.OnceOnAllData:
-            ml_data = self._prepare_labels(ml_data)
+        ml_data = self._prepare_data(ml_data, False, once_all_data=True)
         for train_indexes, test_indexes in cv.split(ml_data):
             train_data = MlDataFactory().ml_data_from_ml_data(ml_data,
                                                               train_indexes)
@@ -102,29 +101,34 @@ class ModelCreator:
             new_ml_data = self.label_creator.get(new_ml_data)
         return new_ml_data
 
-    def _prepare_data(self, ml_data: MlData, preparing_for_validation: bool, skip_label_creator: bool = False):
-        new_ml_data = ml_data.__copy__()
-        for featore_creator in list(filter(lambda x: not x.apply_after_label and
-                                                     (not x.use_just_for_train or x.use_just_for_train and
-                                                      not preparing_for_validation),
+    def _prepare_features(self,
+                          new_ml_data,
+                          preparing_for_validation,
+                          skip_label_creator,
+                          after_label: bool,
+                          once_all_data: bool):
+        for featore_creator in list(filter(lambda x: after_label == x.apply_after_label and
+                                                     (not x.use_just_for_train or x.use_just_for_train and not preparing_for_validation)
+                                                     and once_all_data == x.once_all_data,
                                            self.feature_creators)):
             featore_creator.run_id = self.run_id
             featore_creator.database = self.ml_database_manager
             new_ml_data = featore_creator.apply(new_ml_data)
-            self._debug(f'Applied {featore_creator}, data_len {len(new_ml_data)}. '
+            self._debug(f'Applied {"" if not after_label else "after label"} {featore_creator}, '
+                        f'data_len {len(new_ml_data)}. '
                         f'skip_label_creator={skip_label_creator}, feature len={len(new_ml_data.feature_names)}')
-        if self.label_creator.label_creator_apply_type == LabelCreatorApplyType.BeforeTrain and not skip_label_creator:
+
+    def _prepare_data(self, ml_data: MlData,
+                      preparing_for_validation: bool,
+                      skip_label_creator: bool = False,
+                      once_all_data: bool = False):
+        new_ml_data = ml_data.__copy__()
+        self._prepare_features(new_ml_data, preparing_for_validation, skip_label_creator, False, once_all_data)
+
+        if once_all_data == (self.label_creator.creator_apply_type == CreatorApplyType.OnceOnAllData) and not skip_label_creator:
             new_ml_data = self._prepare_labels(new_ml_data)
-        for featore_creator in list(filter(lambda x: x.apply_after_label and
-                                                     (not x.use_just_for_train or x.use_just_for_train and
-                                                      not preparing_for_validation),
-                                           self.feature_creators)):
-            featore_creator.run_id = self.run_id
-            featore_creator.database = self.ml_database_manager
-            self._debug(f'Applied after label {featore_creator}, '
-                        f'data_len {len(new_ml_data)}. skip_label_creator={skip_label_creator}, '
-                        f'feature len={len(new_ml_data.feature_names)}')
-            new_ml_data = featore_creator.apply(new_ml_data)
+        self._prepare_features(new_ml_data, preparing_for_validation, skip_label_creator, True, once_all_data)
+
         self._debug(f'Prepare data canceled, data_len {len(new_ml_data)}')
         return new_ml_data
 
@@ -168,7 +172,7 @@ class ModelCreator:
 
     def _train(self, ml_data: MlData, split_num: int = None):
         seed = self._set_seeds(self.seed)
-        new_ml_data = self._prepare_data(ml_data, preparing_for_validation=False)
+        new_ml_data = self._prepare_data(ml_data, preparing_for_validation=False, once_all_data=False)
         model = ModelFactory().get_model(self.model_name, self.parameters)
         self._log_parameters(model.parameters, split_num)
         meta = model.fit(new_ml_data)

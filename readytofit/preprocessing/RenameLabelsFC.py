@@ -6,8 +6,8 @@ from readytofit.tools.logging import logged
 @logged
 class RenameLabelsFC(FeatureCreator):
 
-    def __init__(self, apply_feature=None, to_column=None, apply_after_label=False, use_just_for_train=False, new_labels=None, new_label_names=None):
-        FeatureCreator.__init__(self, apply_feature, to_column, apply_after_label, use_just_for_train)
+    def __init__(self, apply_feature=None, to_column=None, use_just_for_train=False, new_labels=None, new_label_names=None):
+        FeatureCreator.__init__(self, apply_feature, to_column, use_just_for_train)
         self.new_labels = new_labels
         self.new_label_names = new_label_names
 

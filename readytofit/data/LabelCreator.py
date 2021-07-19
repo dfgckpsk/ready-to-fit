@@ -1,21 +1,16 @@
 from readytofit.tools.logging import logged
 from .MlData import MlData
+from readytofit.data.CreatorApplyType import CreatorApplyType
 from readytofit.db.MLDatabaseManager import MLDatabaseManager, MlTsValues
-from enum import Enum
-
-
-class LabelCreatorApplyType(Enum):
-    OnceOnAllData = 1
-    BeforeTrain = 2
 
 
 @logged
 class LabelCreator:
 
-    def __init__(self, label_creator_apply_type: LabelCreatorApplyType = LabelCreatorApplyType.OnceOnAllData):
+    def __init__(self, creator_apply_type: CreatorApplyType):
         self.run_id = None
         self.database: MLDatabaseManager = None
-        self.label_creator_apply_type = label_creator_apply_type
+        self.creator_apply_type = creator_apply_type
 
     def get(self, data: MlData) -> MlData:
         return data

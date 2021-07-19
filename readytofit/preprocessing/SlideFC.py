@@ -5,8 +5,8 @@ import pandas as pd
 
 class SlideFC(FeatureCreator):
 
-    def __init__(self, apply_feature=None, to_column=None, apply_after_label=False, slide_values=0):
-        FeatureCreator.__init__(self, apply_feature, to_column, apply_after_label)
+    def __init__(self, apply_feature=None, to_column=None, slide_values=0):
+        FeatureCreator.__init__(self, apply_feature, to_column)
         self.slide_values = slide_values
 
     def apply(self, ml_data: MlData):
