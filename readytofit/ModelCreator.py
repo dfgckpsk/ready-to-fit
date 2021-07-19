@@ -119,17 +119,18 @@ class ModelCreator:
                         f'skip_label_creator={skip_label_creator}, feature len={len(new_ml_data.feature_names)},'
                   f'once_all_data={once_all_data}, after_label={after_label}, skip_label_creator={skip_label_creator},'
                   f'featore_creator={featore_creator}')
+            return new_ml_data
 
     def _prepare_data(self, ml_data: MlData,
                       preparing_for_validation: bool,
                       skip_label_creator: bool = False,
                       once_all_data: bool = False):
         new_ml_data = ml_data.__copy__()
-        self._prepare_features(new_ml_data, preparing_for_validation, skip_label_creator, False, once_all_data)
+        new_ml_data = self._prepare_features(new_ml_data, preparing_for_validation, skip_label_creator, False, once_all_data)
 
         if once_all_data == (self.label_creator.creator_apply_type == CreatorApplyType.OnceOnAllData) and not skip_label_creator:
             new_ml_data = self._prepare_labels(new_ml_data)
-        self._prepare_features(new_ml_data, preparing_for_validation, skip_label_creator, True, once_all_data)
+        new_ml_data = self._prepare_features(new_ml_data, preparing_for_validation, skip_label_creator, True, once_all_data)
 
         self._debug(f'Prepare data canceled, data_len {len(new_ml_data)}')
         return new_ml_data
