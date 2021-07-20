@@ -53,6 +53,7 @@ class LGMBModel(Model):
 
     def fit(self, ml_data: MlData):
 
+        Model.fit(self, ml_data)
         self._debug(f'Start train {self} on data with len {len(ml_data)} and features count {len(ml_data.feature_names)}')
         validation_indexes = None
         if self.validation_obj is not None:

@@ -38,7 +38,7 @@ class SLModel(Model):
         :param ml_data:
         :return:
         """
-
+        Model.fit(self, ml_data)
         self._debug(f'Start train {self} on data with len {len(ml_data)}')
         self.model_object.fit(ml_data.get_features(),
                               ml_data.get_targets(),
