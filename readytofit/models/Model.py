@@ -59,7 +59,7 @@ class Model:
         :param model_name:
         :return:
         """
-        path_ = path + '/' + model_name + '.meta'
+        path_ = path + '/' + model_name + '.model.meta'
         if len(self.meta) > 0:
             with open(path_, "w") as outfile:
                 json.dump(self.meta, outfile, indent=4)
