@@ -65,7 +65,7 @@ class SLModel(Model):
         :return:
         """
 
-        return self.model_object.predict_proba(ml_data.get_features())
+        return self.model_object.predict_proba(ml_data.get_features(feature=self.meta.get('feature_names')))
 
     def dump(self, path, model_name):
 
