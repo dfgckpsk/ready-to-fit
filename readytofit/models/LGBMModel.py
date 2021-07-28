@@ -165,9 +165,11 @@ class LGMBModel(Model):
         :param model_name:
         :return:
         """
+        Model.dump(self, path, model_name)
 
         self.model_object.save_model(path + '/' + model_name + '.model')
 
     def load(self, path):
+        Model.load(self, path)
 
         self.model_object = lgb.Booster(model_file=path)
