@@ -151,7 +151,7 @@ class LGMBModel(Model):
 
             pred_arr = []
             for ind in indexes:
-                pred = predict_method(ml_data.features(ind))
+                pred = predict_method(ml_data.get_features(ind))
                 pred_arr.append(pred)
             pred = np.concatenate(pred_arr)
 

@@ -107,7 +107,7 @@ class MlData:
 
         self.features[name] = values
 
-        self.features = reduce_mem_usage(self.features)
+        self.features = reduce_mem_usage(self.features, False)
 
         if name not in self.feature_names:
             self.feature_names.append(name)
