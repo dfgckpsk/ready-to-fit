@@ -1,12 +1,18 @@
 import pandas as pd
 from typing import List
 from readytofit.tools.logging import logged
+from readytofit.tools.types import reduce_mem_usage
 
 
 @logged
 class MlData:
 
-    def __init__(self, feature_names: List[str], features: pd.DataFrame, labels: pd.Series, weights: pd.Series = None, label_names=None):
+    def __init__(self,
+                 feature_names: List[str],
+                 features: pd.DataFrame,
+                 labels: pd.Series,
+                 weights: pd.Series = None,
+                 label_names=None):
         self.feature_names = feature_names
         self.features = features
         self.labels = labels
@@ -36,11 +42,11 @@ class MlData:
 
         if self.labels is not None and self.features.shape[0] != self.labels.shape[0]:
             self._critical(f'features shape is {self.features.shape[0]}, '
-                        f'but labels shape is {self.labels.shape[0]}')
+                           f'but labels shape is {self.labels.shape[0]}')
 
         if self.weights is not None and self.features.shape[0] != self.weights.shape[0]:
             self._critical(f'features shape is {self.features.shape[0]}, '
-                        f'but weights shape is {self.weights.shape[0]}')
+                           f'but weights shape is {self.weights.shape[0]}')
 
         for feature_name in self.feature_names:
             if feature_name not in self.features.columns:
@@ -100,6 +106,8 @@ class MlData:
             return
 
         self.features[name] = values
+
+        self.features = reduce_mem_usage(self.features)
 
         if name not in self.feature_names:
             self.feature_names.append(name)

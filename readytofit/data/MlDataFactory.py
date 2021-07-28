@@ -1,5 +1,6 @@
 from readytofit.data.MlData import MlData
 import pandas as pd
+from readytofit.tools.types import reduce_mem_usage
 
 
 class MlDataFactory:
@@ -8,6 +9,7 @@ class MlDataFactory:
         if feature_columns is None:
             feature_columns = list(map(lambda x: f'feature_{x}', range(features.shape[1])))
         features = pd.DataFrame(features, columns=feature_columns)
+        features = reduce_mem_usage(features)
         if indexes is not None:
             features.index = indexes
         target = pd.Series(target) if target is not None else None
