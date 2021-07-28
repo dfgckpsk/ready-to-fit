@@ -1,6 +1,5 @@
 from readytofit.data.MlData import MlData
-import pandas as pd
-from readytofit.tools.types import reduce_mem_usage
+import numpy as np
 
 
 class MlDataFactory:
@@ -8,14 +7,10 @@ class MlDataFactory:
     def ml_data_from_numpy(self, features, target, feature_columns=None, indexes=None, weights=None, label_names=None):
         if feature_columns is None:
             feature_columns = list(map(lambda x: f'feature_{x}', range(features.shape[1])))
-        features = pd.DataFrame(features, columns=feature_columns)
-        features = reduce_mem_usage(features)
-        if indexes is not None:
-            features.index = indexes
-        target = pd.Series(target) if target is not None else None
-        if target is not None and indexes is not None:
-            target.index = indexes
-        return MlData(list(feature_columns), features, target, weights=weights, label_names=label_names)
+        features = np.array(features)
+        indexes = np.array(list(range(len(features)))) if indexes is None else np.array(indexes)
+        target = np.array(target) if target is not None else None
+        return MlData(list(feature_columns), features, target, weights=weights, label_names=label_names, indexes=indexes)
 
     def ml_data_from_ml_data(self, ml_data: MlData, indexes):
         return self.ml_data_from_numpy(ml_data.get_features(indexes),
