@@ -39,36 +39,18 @@ class MlData:
         result.weights = self.weights.copy() if self.weights is not None else None
         return result
 
-    def _feature_index(self, feature_name):
-        if type(feature_name) == list:
-            indexes = []
-            for f in feature_name:
-                indexes.append(self.feature_names.index(f))
-            return indexes
-        return self.feature_names.index(feature_name)
-
     def remove_feature(self, feature: str):
         if feature in self.feature_names:
             ind = self._feature_index(feature)
             self.feature_names.remove(feature)
             self.features = np.delete(self.features, ind, 1)
 
-    def validate_data(self):
-
-        if self.labels is not None and self.features.shape[0] != self.labels.shape[0]:
-            self._critical(f'features shape is {self.features.shape[0]}, '
-                           f'but labels shape is {self.labels.shape[0]}')
-
-        if self.weights is not None and self.features.shape[0] != self.weights.shape[0]:
-            self._critical(f'features shape is {self.features.shape[0]}, '
-                           f'but weights shape is {self.weights.shape[0]}')
-
     def get_features(self, indexes=None, feature=None):
         if feature is not None and feature not in self.feature_names and type(feature) == str or \
             type(feature) == list and not set(feature).issubset(set(self.feature_names)):
             self._critical(f'feature {feature} is not in features. Features - "{self.feature_names}"')
 
-        self.validate_data()
+        self._validate_data()
         features = self.features
         if indexes is not None:
             indexes_ = list(map(lambda x: self.index_to_int[x], indexes))
@@ -79,7 +61,7 @@ class MlData:
         return np.copy(features)
 
     def get_targets(self, indexes=None):
-        self.validate_data()
+        self._validate_data()
         if self.labels is None:
             return None
         if indexes is None:
@@ -130,3 +112,24 @@ class MlData:
 
         if name not in self.feature_names:
             self.feature_names.append(name)
+
+    def append(self):
+        pass
+
+    def _feature_index(self, feature_name):
+        if type(feature_name) == list:
+            indexes = []
+            for f in feature_name:
+                indexes.append(self.feature_names.index(f))
+            return indexes
+        return self.feature_names.index(feature_name)
+
+    def _validate_data(self):
+
+        if self.labels is not None and self.features.shape[0] != self.labels.shape[0]:
+            self._critical(f'features shape is {self.features.shape[0]}, '
+                           f'but labels shape is {self.labels.shape[0]}')
+
+        if self.weights is not None and self.features.shape[0] != self.weights.shape[0]:
+            self._critical(f'features shape is {self.features.shape[0]}, '
+                           f'but weights shape is {self.weights.shape[0]}')

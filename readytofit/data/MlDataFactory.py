@@ -10,7 +10,12 @@ class MlDataFactory:
         features = np.array(features)
         indexes = np.array(list(range(len(features)))) if indexes is None else np.array(indexes)
         target = np.array(target) if target is not None else None
-        return MlData(list(feature_columns), features, target, weights=weights, label_names=label_names, indexes=indexes)
+        return MlData(list(feature_columns),
+                      features,
+                      target,
+                      weights=weights,
+                      label_names=label_names,
+                      indexes=indexes)
 
     def ml_data_from_ml_data(self, ml_data: MlData, indexes):
         return self.ml_data_from_numpy(ml_data.get_features(indexes),

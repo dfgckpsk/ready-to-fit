@@ -94,6 +94,23 @@ class ModelCreator:
         if return_models:
             return models
 
+    def _train(self, ml_data: MlData, split_num: int = None):
+        seed = self._set_seeds(self.seed)
+        new_ml_data = self._prepare_data(ml_data, preparing_for_validation=False, once_all_data=False)
+        model = ModelFactory().get_model(self.model_name, self.parameters)
+        self._log_parameters(model.parameters, split_num)
+        meta = model.fit(new_ml_data)
+        # if current_index is not None:
+        #     meta['current_index'] = current_index.get_datetime()
+        meta['current_index'] = self.run_id
+        meta['features_count'] = len(new_ml_data.feature_names)
+        meta['data_length'] = len(new_ml_data)
+        meta['seed'] = seed
+        meta['model_id'] = str(model)
+        meta = self._fill_meta(meta, new_ml_data)
+        meta = self._calculate_labels_count(meta, new_ml_data, True)
+        return model, meta, new_ml_data
+
     def _prepare_labels(self, new_ml_data):
         if self.label_creator is not None:
             self.label_creator.run_id = self.run_id
@@ -114,10 +131,9 @@ class ModelCreator:
             featore_creator.run_id = self.run_id
             featore_creator.database = self.ml_database_manager
             new_ml_data = featore_creator.apply(new_ml_data)
-            print(f'Applied {"" if not after_label else "after label"} {featore_creator}, '
-                        f'data_len {len(new_ml_data)}. '
-                        f'skip_label_creator={skip_label_creator}, feature len={len(new_ml_data.feature_names)},'
-                  f'once_all_data={once_all_data}, after_label={after_label}, skip_label_creator={skip_label_creator},'
+            print(f'Applied {"" if not after_label else "after label"} {featore_creator},  data_len {len(new_ml_data)}.'
+                  f' skip_label_creator={skip_label_creator}, feature len={len(new_ml_data.feature_names)}, '
+                  f'once_all_data={once_all_data}, after_label={after_label}, skip_label_creator={skip_label_creator}, '
                   f'featore_creator={featore_creator}')
         return new_ml_data
 
@@ -172,23 +188,6 @@ class ModelCreator:
         if self.ml_database_manager is not None:
             ml_parameters = MLParameterFactory.from_dict(parameters, self.run_id, MlParameterType.Model, split_num)
             self.ml_database_manager.insert_parameters(ml_parameters)
-
-    def _train(self, ml_data: MlData, split_num: int = None):
-        seed = self._set_seeds(self.seed)
-        new_ml_data = self._prepare_data(ml_data, preparing_for_validation=False, once_all_data=False)
-        model = ModelFactory().get_model(self.model_name, self.parameters)
-        self._log_parameters(model.parameters, split_num)
-        meta = model.fit(new_ml_data)
-        # if current_index is not None:
-        #     meta['current_index'] = current_index.get_datetime()
-        meta['current_index'] = self.run_id
-        meta['features_count'] = len(new_ml_data.feature_names)
-        meta['data_length'] = len(new_ml_data)
-        meta['seed'] = seed
-        meta['model_id'] = str(model)
-        meta = self._fill_meta(meta, new_ml_data)
-        meta = self._calculate_labels_count(meta, new_ml_data, True)
-        return model, meta, new_ml_data
 
     def _dump_ts_metrics(self, data: MlData, values, value_name, split_num):
         if self.run_id is None or self.ml_database_manager is None:
