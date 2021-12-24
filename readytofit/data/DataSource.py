@@ -1,6 +1,6 @@
-from readytofit.db.MLDatabaseManager import MLDatabaseManager
-from readytofit.db.MlParameterFactory import MLParameterFactory, MlParameterType
-from readytofit.data.MlDataFactory import MlDataFactory, MlData
+from ..db.MLDatabaseManager import MLDatabaseManager
+from ..db.MlParameterFactory import MLParameterFactory, MlParameterType
+from ..data.MlDataFactory import MlDataFactory, MlData
 from datetime import datetime
 
 

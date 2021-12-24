@@ -1,6 +1,6 @@
-from readytofit.db.MlParameter import MlParameter, MlParameterType
+from ..db.MlParameter import MlParameter, MlParameterType
 from datetime import datetime
-from readytofit.tools.types import isdigit
+from ..tools.types import isdigit
 
 
 class MLParameterFactory:

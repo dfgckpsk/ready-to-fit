@@ -1,5 +1,5 @@
 from .FiveVariablesPlot import FiveVariablesPlot, go, dash, List
-from readytofit.dashboard.MLDashboardData import MlDashboardData
+from ..dashboard.MLDashboardData import MlDashboardData
 import datetime
 
 

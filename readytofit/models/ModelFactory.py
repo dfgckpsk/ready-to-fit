@@ -1,7 +1,7 @@
 from .LGBMModel import LGMBModel
 from .SLModel import SLModel
-from readytofit.models.StackModel import StackModel
-from readytofit.tools.logging import logged
+from ..models.StackModel import StackModel
+from ..tools.logging import logged
 
 
 @logged

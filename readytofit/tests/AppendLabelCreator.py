@@ -1,4 +1,4 @@
-from readytofit.data.LabelCreator import LabelCreator, MlData
+from ..data.LabelCreator import LabelCreator, MlData
 
 
 class AppendLabelCreator(LabelCreator):

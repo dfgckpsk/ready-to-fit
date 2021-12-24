@@ -1,4 +1,4 @@
-from readytofit.data.FeatureCreator import FeatureCreator, MlData
+from ..data.FeatureCreator import FeatureCreator, MlData
 import numpy as np
 import pandas as pd
 

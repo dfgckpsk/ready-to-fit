@@ -1,8 +1,8 @@
-from readytofit.db.BaseDatabase import BaseDatabase
-from readytofit.db.CreatedMlModels import CreatedMlModels
-from readytofit.db.ExperimentInfo import ExperimentInfo
-from readytofit.db.MlTsValues import MlTsValues
-from readytofit.db.MlParameter import MlParameter
+from ..db.BaseDatabase import BaseDatabase
+from ..db.CreatedMlModels import CreatedMlModels
+from ..db.ExperimentInfo import ExperimentInfo
+from ..db.MlTsValues import MlTsValues
+from ..db.MlParameter import MlParameter
 from datetime import datetime
 from typing import List
 

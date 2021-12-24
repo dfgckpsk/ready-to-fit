@@ -1,10 +1,10 @@
 import dash
 import dash_html_components as html
-from readytofit.tools import logged
-from readytofit.dashboard.MLDashboardData import MlDashboardData
-from readytofit.dashboard.exp_list_layout import exp_layout, exp_callback
-from readytofit.dashboard.MLMetricsThreeVariablesPlot import MLMetricsThreeVariablesPlot
-from readytofit.dashboard.ExperiementsUpdateTable import ExperimentsUpdateTable
+from ..tools import logged
+from ..dashboard.MLDashboardData import MlDashboardData
+from ..dashboard.exp_list_layout import exp_layout, exp_callback
+from ..dashboard.MLMetricsThreeVariablesPlot import MLMetricsThreeVariablesPlot
+from ..dashboard.ExperiementsUpdateTable import ExperimentsUpdateTable
 
 
 @logged

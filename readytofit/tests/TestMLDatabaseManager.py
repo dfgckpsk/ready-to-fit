@@ -1,7 +1,7 @@
 from unittest import TestCase
-from readytofit.db.MLDatabaseManager import MLDatabaseManager, MlTsValues, CreatedMlModels, MlParameter
-from readytofit.db.MlParameter import MlParameterType
-from readytofit.db.clickhouse import Clickhouse
+from ..db.MLDatabaseManager import MLDatabaseManager, MlTsValues, CreatedMlModels, MlParameter
+from ..db.MlParameter import MlParameterType
+from ..db.clickhouse import Clickhouse
 import datetime
 import time
 import pytz

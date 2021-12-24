@@ -1,12 +1,12 @@
 from unittest import TestCase
 import numpy as np
 import pandas as pd
-from readytofit.preprocessing.RenameLabelsFC import RenameLabelsFC
-from readytofit.preprocessing.LeaveLabelsFC import LeaveLabelsFC
-from readytofit.preprocessing.SlideFC import SlideFC
-from readytofit.preprocessing.ByColumnsNormalizationFC import ByColumnsNormalizationFC
-from readytofit.preprocessing.SimpleSampleWeightsFC import SimpleSampleWeightsFC
-from readytofit.data.MlDataFactory import MlDataFactory
+from ..preprocessing.RenameLabelsFC import RenameLabelsFC
+from ..preprocessing.LeaveLabelsFC import LeaveLabelsFC
+from ..preprocessing.SlideFC import SlideFC
+from ..preprocessing.ByColumnsNormalizationFC import ByColumnsNormalizationFC
+from ..preprocessing.SimpleSampleWeightsFC import SimpleSampleWeightsFC
+from ..data.MlDataFactory import MlDataFactory
 import random
 
 

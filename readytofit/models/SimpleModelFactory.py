@@ -1,6 +1,6 @@
 from .LGBMModel import LGMBModel
 from .SLModel import SLModel
-from readytofit.tools.logging import logged
+from ..tools.logging import logged
 
 
 @logged

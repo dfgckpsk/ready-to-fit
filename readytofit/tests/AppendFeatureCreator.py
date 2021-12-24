@@ -1,5 +1,5 @@
-from readytofit.data.FeatureCreator import FeatureCreator
-from readytofit.data.MlData import MlData
+from ..data.FeatureCreator import FeatureCreator
+from ..data.MlData import MlData
 
 
 class AppendFeatureCreator(FeatureCreator):

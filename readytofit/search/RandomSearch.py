@@ -1,6 +1,6 @@
 import random
 from .GridSearch import GridSearch
-from readytofit.tools.types import isfloat, isint
+from ..tools.types import isfloat, isint
 
 
 class ParamType:

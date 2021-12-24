@@ -1,6 +1,6 @@
-from readytofit.data.FeatureCreator import FeatureCreator, MlData
+from ..data.FeatureCreator import FeatureCreator, MlData
 import pandas as pd
-from readytofit.tools.logging import logged
+from ..tools.logging import logged
 
 
 @logged

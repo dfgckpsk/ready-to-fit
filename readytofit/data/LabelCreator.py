@@ -1,7 +1,7 @@
-from readytofit.tools.logging import logged
+from ..tools.logging import logged
 from .MlData import MlData
-from readytofit.data.CreatorApplyType import CreatorApplyType
-from readytofit.db.MLDatabaseManager import MLDatabaseManager, MlTsValues
+from ..data.CreatorApplyType import CreatorApplyType
+from ..db.MLDatabaseManager import MLDatabaseManager, MlTsValues
 
 
 @logged

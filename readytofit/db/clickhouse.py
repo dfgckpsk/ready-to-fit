@@ -1,6 +1,6 @@
-from readytofit.tools.logging import logged
+from ..tools.logging import logged
 import pandas as pd
-from readytofit.db.BaseDatabase import BaseDatabase
+from ..db.BaseDatabase import BaseDatabase
 import clickhouse_driver
 
 

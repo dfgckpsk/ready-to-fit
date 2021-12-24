@@ -1,4 +1,4 @@
-from readytofit.db.MLDatabaseManager import MLDatabaseManager, List, MlTsValues
+from ..db.MLDatabaseManager import MLDatabaseManager, List, MlTsValues
 from datetime import datetime
 
 

@@ -1,6 +1,6 @@
 import numpy as np
 from .CVBase import CVBase, MlData
-from readytofit.tools.logging import logged
+from ..tools.logging import logged
 
 
 WIDE_MODE = 'wide'

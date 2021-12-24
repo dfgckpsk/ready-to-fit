@@ -1,11 +1,11 @@
-from readytofit.ModelCreator import ModelCreator
-from readytofit.data.LabelCreator import LabelCreator
-from readytofit.data.FeatureCreator import FeatureCreator
-from readytofit.metric.MetricBase import MetricBase
-from readytofit.db.MLDatabaseManager import MLDatabaseManager
-from readytofit.data.MlData import MlData
-from readytofit.search.GridSearch import GridSearch
-from readytofit.cv.CVBase import CVBase
+from .ModelCreator import ModelCreator
+from .data.LabelCreator import LabelCreator
+from .data.FeatureCreator import FeatureCreator
+from .metric.MetricBase import MetricBase
+from .db.MLDatabaseManager import MLDatabaseManager
+from .data.MlData import MlData
+from .search.GridSearch import GridSearch
+from .cv.CVBase import CVBase
 from typing import List, Optional
 from datetime import datetime
 

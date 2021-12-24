@@ -1,5 +1,5 @@
-from readytofit.dashboard.UpdateTable import UpdateTable, dash, List
-from readytofit.dashboard.MLDashboardData import MlDashboardData
+from ..dashboard.UpdateTable import UpdateTable, dash, List
+from ..dashboard.MLDashboardData import MlDashboardData
 
 
 class ExperimentsUpdateTable(UpdateTable):

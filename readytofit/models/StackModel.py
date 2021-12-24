@@ -1,7 +1,7 @@
 from .Model import Model, MlData
-from readytofit.models.SimpleModelFactory import SimpleModelFactory
-from readytofit.data.MlDataFactory import MlDataFactory
-from readytofit.tools.logging import logged
+from ..models.SimpleModelFactory import SimpleModelFactory
+from ..data.MlDataFactory import MlDataFactory
+from ..tools.logging import logged
 from typing import List
 
 

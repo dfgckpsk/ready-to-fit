@@ -1,4 +1,4 @@
-from readytofit.data.DataSource import DataSource, MlData, MlDataFactory
+from ..data.DataSource import DataSource, MlData, MlDataFactory
 from sklearn.datasets import load_iris
 
 

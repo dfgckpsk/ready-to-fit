@@ -1,5 +1,5 @@
-from readytofit.data.FeatureCreator import FeatureCreator, MlData
-from readytofit.data.MlDataFactory import MlDataFactory
+from ..data.FeatureCreator import FeatureCreator, MlData
+from ..data.MlDataFactory import MlDataFactory
 import numpy as np
 
 

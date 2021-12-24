@@ -1,5 +1,5 @@
-from readytofit.search.GridSearch import GridSearch
-from readytofit.search.RandomSearch import RandomSearch
+from ..search.GridSearch import GridSearch
+from ..search.RandomSearch import RandomSearch
 from unittest import TestCase
 
 

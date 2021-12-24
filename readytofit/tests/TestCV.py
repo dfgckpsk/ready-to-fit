@@ -1,9 +1,9 @@
 import unittest
 from sklearn.datasets import load_iris
 from sklearn.model_selection import KFold, StratifiedKFold
-from readytofit.data.MlDataFactory import MlDataFactory
-from readytofit.cv.SLCV import SLCV
-from readytofit.cv.TimeSeriesSplit import TimeSeriesSplit
+from ..data.MlDataFactory import MlDataFactory
+from ..cv.SLCV import SLCV
+from ..cv.TimeSeriesSplit import TimeSeriesSplit
 import numpy as np
 
 

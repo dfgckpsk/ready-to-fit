@@ -1,18 +1,18 @@
 import unittest
 from sklearn.datasets import load_iris
-from readytofit.tests.TestDataSource import TestDataSource
-from readytofit.cv.SLCV import SLCV
-from readytofit.data.FeatureCreator import FeatureCreator
-from readytofit.data.LabelCreator import LabelCreator, CreatorApplyType
-from readytofit.data.MlDataFactory import MlDataFactory
-from readytofit.db.MLDatabaseManager import MLDatabaseManager
-from readytofit.metric.SLMetric import SLMetric
-from readytofit.models.LGBMModel import LGMBModel
-from readytofit.models.SLModel import SLModel
-from readytofit.tests.AppendFeatureCreator import AppendFeatureCreator
-from readytofit.tests.AppendLabelCreator import AppendLabelCreator
-from readytofit.ModelCreator import ModelCreator
-from readytofit.db.clickhouse import Clickhouse
+from ..tests.TestDataSource import TestDataSource
+from ..cv.SLCV import SLCV
+from ..data.FeatureCreator import FeatureCreator
+from ..data.LabelCreator import LabelCreator, CreatorApplyType
+from ..data.MlDataFactory import MlDataFactory
+from ..db.MLDatabaseManager import MLDatabaseManager
+from ..metric.SLMetric import SLMetric
+from ..models.LGBMModel import LGMBModel
+from ..models.SLModel import SLModel
+from ..tests.AppendFeatureCreator import AppendFeatureCreator
+from ..tests.AppendLabelCreator import AppendLabelCreator
+from ..ModelCreator import ModelCreator
+from ..db.clickhouse import Clickhouse
 from datetime import datetime
 
 

@@ -1,6 +1,6 @@
 import pandas as pd
 from typing import List
-from readytofit.tools.logging import logged
+from ..tools.logging import logged
 
 
 @logged

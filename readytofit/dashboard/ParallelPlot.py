@@ -1,4 +1,4 @@
-from readytofit.dashboard.base.DashboardObject import DashboardObject
+from ..dashboard.base.DashboardObject import DashboardObject
 import plotly.graph_objs as go
 import dash_core_components as dcc
 import dash_html_components as html

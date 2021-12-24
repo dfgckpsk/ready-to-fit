@@ -1,16 +1,16 @@
-from readytofit.cv.CVBase import CVBase
-from readytofit.data.DataSource import DataSource
-from readytofit.data.FeatureCreator import FeatureCreator
-from readytofit.data.LabelCreator import LabelCreator, CreatorApplyType
-from readytofit.data.MlData import MlData
-from readytofit.data.MlDataFactory import MlDataFactory
-from readytofit.db.CreatedMlModels import CreatedMlModels
-from readytofit.db.MLDatabaseManager import MLDatabaseManager, MlTsValues
-from readytofit.metric.MetricBase import MetricBase
-from readytofit.models.ModelFactory import ModelFactory
+from .cv.CVBase import CVBase
+from .data.DataSource import DataSource
+from .data.FeatureCreator import FeatureCreator
+from .data.LabelCreator import LabelCreator, CreatorApplyType
+from .data.MlData import MlData
+from .data.MlDataFactory import MlDataFactory
+from .db.CreatedMlModels import CreatedMlModels
+from .db.MLDatabaseManager import MLDatabaseManager, MlTsValues
+from .metric.MetricBase import MetricBase
+from .models.ModelFactory import ModelFactory
 from typing import List, Optional
-from readytofit.tools import logged
-from readytofit.db.MlParameterFactory import MLParameterFactory, MlParameterType
+from .tools import logged
+from .db.MlParameterFactory import MLParameterFactory, MlParameterType
 
 from datetime import datetime
 import numpy as np

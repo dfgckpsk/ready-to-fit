@@ -1,4 +1,4 @@
-from readytofit.data.MlData import MlData
+from ..data.MlData import MlData
 import pandas as pd
 
 

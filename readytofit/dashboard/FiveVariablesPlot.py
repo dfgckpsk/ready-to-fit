@@ -3,7 +3,7 @@ import dash_html_components as html
 from dash.dependencies import Input, Output
 from dash.exceptions import PreventUpdate
 from typing import List
-from readytofit.dashboard.base.DashboardObject import DashboardObject, dash
+from ..dashboard.base.DashboardObject import DashboardObject, dash
 import plotly.graph_objs as go
 import time
 

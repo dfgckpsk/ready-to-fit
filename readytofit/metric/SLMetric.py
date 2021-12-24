@@ -1,6 +1,6 @@
 from sklearn.metrics import accuracy_score, f1_score, classification_report, mean_squared_error, mean_absolute_error
-from readytofit.metric.MetricBase import MetricBase
-from readytofit.tools.logging import logged
+from ..metric.MetricBase import MetricBase
+from ..tools.logging import logged
 import numpy as np
 
 

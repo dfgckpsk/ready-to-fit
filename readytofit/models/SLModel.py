@@ -1,10 +1,10 @@
-from readytofit.models.Model import Model
-from readytofit.data.MlData import MlData
+from ..models.Model import Model
+from ..data.MlData import MlData
 from sklearn.utils import _joblib
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.decomposition import PCA
-from readytofit.tools.logging import logged
+from ..tools.logging import logged
 
 
 @logged
