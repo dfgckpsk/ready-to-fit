@@ -1,4 +1,5 @@
-from ..data.FeatureCreator import FeatureCreator, MlData, CreatorApplyType
+from ..data.FeatureCreator import FeatureCreator, MlData
+from ..data.CreatorApplyType import CreatorApplyTypeLabel
 from ..data.MlDataFactory import MlDataFactory
 import pandas as pd
 from ..tools.logging import logged
@@ -7,7 +8,7 @@ from ..tools.logging import logged
 @logged
 class LeaveLabelsFC(FeatureCreator):
 
-    def __init__(self, apply_feature=None, to_column=None, use_just_for_train=False, creator_apply_type: CreatorApplyType = CreatorApplyType.BeforeTrain, leave_labels=None, new_label_names=None):
+    def __init__(self, apply_feature=None, to_column=None, use_just_for_train=False, creator_apply_type: CreatorApplyTypeLabel = CreatorApplyTypeLabel.BeforeTrain, leave_labels=None, new_label_names=None):
         FeatureCreator.__init__(self, apply_feature, to_column, use_just_for_train, creator_apply_type)
         self.leave_labels = leave_labels
         self.new_label_names = new_label_names

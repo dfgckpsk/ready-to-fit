@@ -2,8 +2,8 @@ import unittest
 from sklearn.datasets import load_iris
 from ..tests.TestDataSource import TestDataSource
 from ..cv.SLCV import SLCV
-from ..data.FeatureCreator import FeatureCreator
-from ..data.LabelCreator import LabelCreator, CreatorApplyType
+from ..data.FeatureCreator import FeatureCreator, CreatorApplyType
+from ..data.LabelCreator import LabelCreator, CreatorApplyTypeLabel
 from ..data.MlDataFactory import MlDataFactory
 from ..db.MLDatabaseManager import MLDatabaseManager
 from ..metric.SLMetric import SLMetric
@@ -50,8 +50,8 @@ class TestModel(unittest.TestCase):
         assert len(self._ml_data.get_targets([1,2,3,4])) == 4
 
     def test_model_creator(self):
-        feature_creators = [FeatureCreator()]
-        label_creator = LabelCreator(CreatorApplyType.BeforeTrain)
+        feature_creators = [FeatureCreator(apply_feature='', creator_apply_type=CreatorApplyType.BeforeTrainBeforeLabel)]
+        label_creator = LabelCreator(CreatorApplyTypeLabel.BeforeTrain)
         ml_model_manager = MLDatabaseManager(self._database)
         run_id = datetime.utcnow()
         model_creator = ModelCreator('test_model_creator',
@@ -72,8 +72,8 @@ class TestModel(unittest.TestCase):
         assert len(results) == 1
 
     def test_model_creator_validation(self):
-        feature_creators = [FeatureCreator()]
-        label_creator = LabelCreator(CreatorApplyType.BeforeTrain)
+        feature_creators = [FeatureCreator(apply_feature='', creator_apply_type=CreatorApplyType.BeforeTrainBeforeLabel)]
+        label_creator = LabelCreator(CreatorApplyTypeLabel.BeforeTrain)
         ml_model_manager = MLDatabaseManager(self._database)
         run_id = datetime.utcnow()
         model_creator = ModelCreator('test_model_creator_validation',
@@ -94,8 +94,8 @@ class TestModel(unittest.TestCase):
         assert len(results) == 5
 
     def test_model_creator_validation_sl(self):
-        feature_creators = [FeatureCreator()]
-        label_creator = LabelCreator(CreatorApplyType.BeforeTrain)
+        feature_creators = [FeatureCreator(apply_feature='', creator_apply_type=CreatorApplyType.BeforeTrainBeforeLabel)]
+        label_creator = LabelCreator(CreatorApplyTypeLabel.BeforeTrain)
         run_id = datetime.utcnow()
         model_creator = ModelCreator('test_model_creator_validation',
                                      'slmodel',
@@ -116,13 +116,13 @@ class TestModel(unittest.TestCase):
     def test_feature_creator(self):
         append_value = 3
         before_features = self._ml_data.get_features(feature='feature_1')
-        self._ml_data = AppendFeatureCreator(append_value=append_value, apply_feature='feature_1').apply(self._ml_data)
+        self._ml_data = AppendFeatureCreator(parameters=dict(append_value=append_value), apply_feature='feature_1').apply(self._ml_data)
         after_features = self._ml_data.get_features(feature='feature_1')
         assert (before_features + append_value == after_features).all()
 
         append_value = 5
         before_features = self._ml_data.get_features(feature='feature_2')
-        self._ml_data = AppendFeatureCreator(append_value=append_value,
+        self._ml_data = AppendFeatureCreator(parameters=dict(append_value=append_value),
                                              apply_feature='feature_2',
                                              to_column='feature_4').apply(self._ml_data)
         after_features = self._ml_data.get_features(feature='feature_4')

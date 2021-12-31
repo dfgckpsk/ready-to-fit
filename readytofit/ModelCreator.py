@@ -1,7 +1,7 @@
 from .cv.CVBase import CVBase
 from .data.DataSource import DataSource
 from .data.FeatureCreator import FeatureCreator
-from .data.LabelCreator import LabelCreator, CreatorApplyType
+from .data.LabelCreator import LabelCreator, CreatorApplyTypeLabel
 from .data.MlData import MlData
 from .data.MlDataFactory import MlDataFactory
 from .db.CreatedMlModels import CreatedMlModels
@@ -128,7 +128,7 @@ class ModelCreator:
         new_ml_data = ml_data.__copy__()
         new_ml_data = self._prepare_features(new_ml_data, preparing_for_validation, skip_label_creator, False, once_all_data)
 
-        if once_all_data == (self.label_creator.creator_apply_type == CreatorApplyType.OnceOnAllData) and not skip_label_creator:
+        if once_all_data == (self.label_creator.creator_apply_type == CreatorApplyTypeLabel.OnceOnAllData) and not skip_label_creator:
             new_ml_data = self._prepare_labels(new_ml_data)
         new_ml_data = self._prepare_features(new_ml_data, preparing_for_validation, skip_label_creator, True, once_all_data)
 

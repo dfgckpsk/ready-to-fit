@@ -8,7 +8,12 @@ from ..data.CreatorApplyType import CreatorApplyType
 @logged
 class FeatureCreator:
 
-    def __init__(self, apply_feature=None, to_column=None, use_just_for_train=False, creator_apply_type: CreatorApplyType = CreatorApplyType.BeforeTrainBeforeLabel):
+    def __init__(self,
+                 apply_feature,
+                 creator_apply_type: CreatorApplyType,
+                 to_column=None,
+                 use_just_for_train=False,
+                 parameters: dict = {}):
         self.apply_feature = apply_feature
         self.save_feature = to_column
         self.use_just_for_train = use_just_for_train
@@ -17,6 +22,7 @@ class FeatureCreator:
         self.run_id = None
         self.database: MLDatabaseManager = None
         self.creator_apply_type = creator_apply_type
+        self.parameters = parameters
 
     @property
     def apply_after_label(self):

@@ -7,6 +7,7 @@ from ..preprocessing.SlideFC import SlideFC
 from ..preprocessing.ByColumnsNormalizationFC import ByColumnsNormalizationFC
 from ..preprocessing.SimpleSampleWeightsFC import SimpleSampleWeightsFC
 from ..data.MlDataFactory import MlDataFactory
+from ..data.FeatureCreator import CreatorApplyType
 import random
 
 
@@ -26,14 +27,14 @@ class TestFC(TestCase):
         row_count = 100000
         ml_data = self.generate_ml_data(row_count)
 
-        slide_fc = SlideFC(slide_values=2)
+        slide_fc = SlideFC(parameters=dict(slide_values=2))
         ml_data_ = slide_fc.apply(ml_data)
         assert len(ml_data_.feature_names) == 6
         assert len(ml_data) - 2 == len(ml_data_)
         assert ml_data_.get_features(indexes=[ml_data_.get_indexes()[2]], feature='feature_0_2') == \
                ml_data_.get_features(indexes=[ml_data_.get_indexes()[0]], feature='feature_0')
 
-        slide_fc = SlideFC(slide_values=2, apply_feature=['feature_0'])
+        slide_fc = SlideFC(parameters=dict(slide_values=2), apply_feature=['feature_0'])
         ml_data_ = slide_fc.apply(ml_data)
         assert len(ml_data_.feature_names) == 4
         assert len(ml_data) - 2 == len(ml_data_)
@@ -44,8 +45,9 @@ class TestFC(TestCase):
         row_count = 100000
         ml_data = self.generate_ml_data(row_count)
 
-        slide_fc = SlideFC(slide_values=2)
-        by_columns_normalization_fc = ByColumnsNormalizationFC(apply_feature=['feature_0', 'feature_1'])
+        slide_fc = SlideFC(parameters=dict(slide_values=2))
+        by_columns_normalization_fc = ByColumnsNormalizationFC(apply_feature=['feature_0', 'feature_1'],
+                                                               creator_apply_type=CreatorApplyType.BeforeTrainBeforeLabel)
 
         ml_data_ = slide_fc.apply(ml_data)
         wide_features = pd.DataFrame(ml_data_.get_features(), columns=ml_data_.feature_names)
@@ -67,13 +69,13 @@ class TestFC(TestCase):
         ml_data = self.generate_ml_data(10)
         ml_data.update_labels([1, 0, 0, 1, 1, 0, 0, 0, 0, 0])
 
-        sample_weights_fc = SimpleSampleWeightsFC()
+        sample_weights_fc = SimpleSampleWeightsFC(apply_feature='', creator_apply_type=CreatorApplyType.BeforeTrainBeforeLabel)
         ml_data = sample_weights_fc.apply(ml_data)
         assert ([0.7, 0.3, 0.3, 0.7, 0.7, 0.3, 0.3, 0.3, 0.3, 0.3] == ml_data.get_weights()).all()
 
         ml_data.update_labels([1, 0, 0, 1, 0, 0, 0, 0, 0, 0])
 
-        sample_weights_fc = SimpleSampleWeightsFC()
+        sample_weights_fc = SimpleSampleWeightsFC(apply_feature='', creator_apply_type=CreatorApplyType.BeforeTrainBeforeLabel)
         ml_data = sample_weights_fc.apply(ml_data)
         assert ([0.8, 0.2, 0.2, 0.8, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2] == ml_data.get_weights()).all()
 

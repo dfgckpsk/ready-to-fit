@@ -1,13 +1,17 @@
 from ..data.FeatureCreator import FeatureCreator, MlData
 from ..data.MlDataFactory import MlDataFactory
+from ..parameters.BaseParameter import BaseParameter, ParameterTypes
 import pandas as pd
 
 
 class SlideFC(FeatureCreator):
 
-    def __init__(self, apply_feature=None, to_column=None, slide_values=0):
-        FeatureCreator.__init__(self, apply_feature, to_column)
-        self.slide_values = slide_values
+    def __init__(self, apply_feature=None, to_column=None, parameters={}):
+        FeatureCreator.__init__(self, apply_feature, to_column, parameters=parameters)
+        self.slide_values = self.parameters.get('slide_values')
+
+    def __parameters_description(self):
+        return [BaseParameter('slide_values', ParameterTypes.Integer, (0, 100))]
 
     def apply(self, ml_data: MlData):
 

@@ -1,13 +1,13 @@
 from ..tools.logging import logged
 from .MlData import MlData
-from ..data.CreatorApplyType import CreatorApplyType
+from ..data.CreatorApplyType import CreatorApplyTypeLabel
 from ..db.MLDatabaseManager import MLDatabaseManager, MlTsValues
 
 
 @logged
 class LabelCreator:
 
-    def __init__(self, creator_apply_type: CreatorApplyType):
+    def __init__(self, creator_apply_type: CreatorApplyTypeLabel):
         self.run_id = None
         self.database: MLDatabaseManager = None
         self.creator_apply_type = creator_apply_type
