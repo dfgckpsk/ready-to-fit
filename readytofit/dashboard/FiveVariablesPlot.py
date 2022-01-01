@@ -1,39 +1,49 @@
+from typing import List
+from data_tools.readytofit.readytofit.dashboard.base.DashboardObject import DashboardObject, dash
 import dash_core_components as dcc
 import dash_html_components as html
-from dash.dependencies import Input, Output
-from dash.exceptions import PreventUpdate
-from typing import List
-from ..dashboard.base.DashboardObject import DashboardObject, dash
+import dash_table as dtable
 import plotly.graph_objs as go
+from dash.exceptions import PreventUpdate
+
+from dash.dependencies import Input, Output
 import time
 
-DRAWDOWN_PARAM_1 = 'drawdown-param-1'
-DRAWDOWN_PARAM_2 = 'drawdown-param-2'
-DRAWDOWN_PARAM_3 = 'drawdown-param-3'
-DRAWDOWN_PARAM_4 = 'drawdown-param-4'
-DRAWDOWN_PARAM_5 = 'drawdown-param-5'
-DRAWDOWN_PLOT_1 = 'drawdown-plot-1'
-DRAWDOWN_PLOT_2 = 'drawdown-plot-2'
-DRAWDOWN_PLOT_3 = 'drawdown-plot-3'
-DRAWDOWN_PLOT_4 = 'drawdown-plot-4'
-DRAWDOWN_PLOT_5 = 'drawdown-plot-5'
-DRAWDOWN_RUN_ID = 'drawdown-run-id'
+
+# DRAWDOWN_PLOT_TYPE - markets or lines
+# DRAWDOWN_FEATURE - selector with feature names to plot
+# DRAWDOWN_DATA_ID - some selector for data, for example runs for experiments or symbol for stocks
+
+
+
+DRAWDOWN_FEATURE_1 = 'drawdown-param-1'
+DRAWDOWN_FEATURE_2 = 'drawdown-param-2'
+DRAWDOWN_FEATURE_3 = 'drawdown-param-3'
+DRAWDOWN_FEATURE_4 = 'drawdown-param-4'
+DRAWDOWN_FEATURE_5 = 'drawdown-param-5'
+DRAWDOWN_PLOT_TYPE_1 = 'drawdown-plot-1'
+DRAWDOWN_PLOT_TYPE_2 = 'drawdown-plot-2'
+DRAWDOWN_PLOT_TYPE_3 = 'drawdown-plot-3'
+DRAWDOWN_PLOT_TYPE_4 = 'drawdown-plot-4'
+DRAWDOWN_PLOT_TYPE_5 = 'drawdown-plot-5'
+
+DRAWDOWN_DATA_ID = 'drawdown-run-id'
 SECONDARY_CHECKLIST_ID = 'secondary-checklist-id'
 UPDATE_RUNS_ID = 'update-runs-id'
 FIGURE_ID = 'figure-id'
-CHECKLIST_OPTIONS = ['1 secondary',
-                     '2 secondary',
-                     '3 secondary',
-                     '4 secondary',
-                     '5 secondary']
+SET_SECONDARY_CHECKLIST_OPTIONS = ['Set 1 y axis to secondary',
+                                   'Set 2 y axis to secondary',
+                                   'Set 3 y axis to secondary',
+                                   'Set 4 y axis to secondary',
+                                   'Set 5 y axis to secondary']
 
 
-class FiveVariablesPlot(DashboardObject):
+class RealtimeUpdatePlot(DashboardObject):
 
     def __init__(self, app: dash.Dash, title: str = 'ThreeVariablesPlot'):
         DashboardObject.__init__(self, app)
         self.callback_objects = [self._callback_update_data_id,
-                                 self._callback_update_plot_parameter_names,
+                                 self._callback_update_feature_names,
                                  self._callback_select_data_options]
         self.data_id = None
         self.data = {}
@@ -48,7 +58,7 @@ class FiveVariablesPlot(DashboardObject):
         layout += [html.H2(self.title),
                    html.Button('Update runs', id=UPDATE_RUNS_ID, n_clicks=0)]
         parameters_layouts = self._layout_data_id_drawdown()
-        parameters_layouts += self._layout_plot_parameters()
+        parameters_layouts += self._layout_plot_types()
         figure_layout = self._layout_figure()
         data_layout = html.Div([html.Div(figure_layout, style={'width': '80%', 'display': 'inline-block'}),
                                 html.Div(parameters_layouts, style={'width': '20%',
@@ -63,38 +73,38 @@ class FiveVariablesPlot(DashboardObject):
                     id="loading-4",
                     type="circle",
                     children=
-                    dcc.Dropdown(id=DRAWDOWN_RUN_ID,
-                             style={'width': '90%', 'display': 'inline-block'}))]
+                    dcc.Dropdown(id=DRAWDOWN_DATA_ID,
+                                 style={'width': '90%', 'display': 'inline-block'}))]
 
-    def _layout_plot_parameters(self):
+    def _layout_plot_types(self):
         plot_parameters = ['line', 'markers']
-        drawdowns_layout = [dcc.Dropdown(id=DRAWDOWN_PARAM_1),
-                            dcc.Dropdown(id=DRAWDOWN_PLOT_1,
+        drawdowns_layout = [dcc.Dropdown(id=DRAWDOWN_FEATURE_1),
+                            dcc.Dropdown(id=DRAWDOWN_PLOT_TYPE_1,
                                          options=[{'label': i, 'value': i} for i in plot_parameters],
                                          value=plot_parameters[0]),
 
-                            dcc.Dropdown(id=DRAWDOWN_PARAM_2),
-                            dcc.Dropdown(id=DRAWDOWN_PLOT_2,
+                            dcc.Dropdown(id=DRAWDOWN_FEATURE_2),
+                            dcc.Dropdown(id=DRAWDOWN_PLOT_TYPE_2,
                                          options=[{'label': i, 'value': i} for i in plot_parameters],
                                          value=plot_parameters[0]),
 
-                            dcc.Dropdown(id=DRAWDOWN_PARAM_3),
-                            dcc.Dropdown(id=DRAWDOWN_PLOT_3,
+                            dcc.Dropdown(id=DRAWDOWN_FEATURE_3),
+                            dcc.Dropdown(id=DRAWDOWN_PLOT_TYPE_3,
                                          options=[{'label': i, 'value': i} for i in plot_parameters],
                                          value=plot_parameters[0]),
 
-                            dcc.Dropdown(id=DRAWDOWN_PARAM_4),
-                            dcc.Dropdown(id=DRAWDOWN_PLOT_4,
+                            dcc.Dropdown(id=DRAWDOWN_FEATURE_4),
+                            dcc.Dropdown(id=DRAWDOWN_PLOT_TYPE_4,
                                          options=[{'label': i, 'value': i} for i in plot_parameters],
                                          value=plot_parameters[0]),
 
-                            dcc.Dropdown(id=DRAWDOWN_PARAM_5),
-                            dcc.Dropdown(id=DRAWDOWN_PLOT_5,
+                            dcc.Dropdown(id=DRAWDOWN_FEATURE_5),
+                            dcc.Dropdown(id=DRAWDOWN_PLOT_TYPE_5,
                                          options=[{'label': i, 'value': i} for i in plot_parameters],
                                          value=plot_parameters[0]),
 
                             dcc.Checklist(id=SECONDARY_CHECKLIST_ID,
-                                          options=[{'label': i, 'value': i} for i in CHECKLIST_OPTIONS],
+                                          options=[{'label': i, 'value': i} for i in SET_SECONDARY_CHECKLIST_OPTIONS],
                                           labelStyle={'width': '90%', 'display': 'inline-block'})
                 ]
         return [html.H4('settings'),
@@ -110,44 +120,44 @@ class FiveVariablesPlot(DashboardObject):
                         children=dcc.Graph(id=FIGURE_ID, style={'height': '90vh'}))]
 
     def _callback_update_data_id(self, app):
-        @app.callback(Output(DRAWDOWN_RUN_ID, 'options'),
+        @app.callback(Output(DRAWDOWN_DATA_ID, 'options'),
                       Input(UPDATE_RUNS_ID, 'value'))
         def update_run_id(n_clicks):
             run_ids = self._get_data_id_list()
             run_ids = [{'label': i, 'value': i} for i in run_ids*3]
             return run_ids
 
-    def _callback_update_plot_parameter_names(self, app):
-        @app.callback(Output(DRAWDOWN_PARAM_1, 'options'),
-                      Output(DRAWDOWN_PARAM_2, 'options'),
-                      Output(DRAWDOWN_PARAM_3, 'options'),
-                      Output(DRAWDOWN_PARAM_4, 'options'),
-                      Output(DRAWDOWN_PARAM_5, 'options'),
-                      [Input(DRAWDOWN_RUN_ID, 'value')])
+    def _callback_update_feature_names(self, app):
+        @app.callback(Output(DRAWDOWN_FEATURE_1, 'options'),
+                      Output(DRAWDOWN_FEATURE_2, 'options'),
+                      Output(DRAWDOWN_FEATURE_3, 'options'),
+                      Output(DRAWDOWN_FEATURE_4, 'options'),
+                      Output(DRAWDOWN_FEATURE_5, 'options'),
+                      [Input(DRAWDOWN_DATA_ID, 'value')])
         def update_plot_parameter_names(data_id):
-            paremeter_names = self._get_parameter_names_for_plot(data_id)
+            paremeter_names = self._get_feature_names_for_plot(data_id)
             paremeter_names = [{'label': i, 'value': i} for i in paremeter_names]
             return paremeter_names, paremeter_names, paremeter_names, paremeter_names, paremeter_names
 
     def _callback_select_data_options(self, app):
         @app.callback(Output(FIGURE_ID, 'figure'),
-                      Input(DRAWDOWN_PARAM_1, 'value'),
-                      Input(DRAWDOWN_PARAM_2, 'value'),
-                      Input(DRAWDOWN_PARAM_3, 'value'),
-                      Input(DRAWDOWN_PARAM_4, 'value'),
-                      Input(DRAWDOWN_PARAM_5, 'value'),
-                      Input(DRAWDOWN_PLOT_1, 'value'),
-                      Input(DRAWDOWN_PLOT_2, 'value'),
-                      Input(DRAWDOWN_PLOT_3, 'value'),
-                      Input(DRAWDOWN_PLOT_4, 'value'),
-                      Input(DRAWDOWN_PLOT_5, 'value'),
-                      Input(DRAWDOWN_RUN_ID, 'value'),
+                      Input(DRAWDOWN_FEATURE_1, 'value'),
+                      Input(DRAWDOWN_FEATURE_2, 'value'),
+                      Input(DRAWDOWN_FEATURE_3, 'value'),
+                      Input(DRAWDOWN_FEATURE_4, 'value'),
+                      Input(DRAWDOWN_FEATURE_5, 'value'),
+                      Input(DRAWDOWN_PLOT_TYPE_1, 'value'),
+                      Input(DRAWDOWN_PLOT_TYPE_2, 'value'),
+                      Input(DRAWDOWN_PLOT_TYPE_3, 'value'),
+                      Input(DRAWDOWN_PLOT_TYPE_4, 'value'),
+                      Input(DRAWDOWN_PLOT_TYPE_5, 'value'),
+                      Input(DRAWDOWN_DATA_ID, 'value'),
                       Input(SECONDARY_CHECKLIST_ID, 'value'))
-        def select_experiment(param_1,
-                              param_2,
-                              param_3,
-                              param_4,
-                              param_5,
+        def select_experiment(feature_1,
+                              feature_2,
+                              feature_3,
+                              feature_4,
+                              feature_5,
                               plot_type_1,
                               plot_type_2,
                               plot_type_3,
@@ -155,11 +165,11 @@ class FiveVariablesPlot(DashboardObject):
                               plot_type_5,
                               data_id,
                               selected_secondary):
-            figure = self._update_figure(param_1,
-                                         param_2,
-                                         param_3,
-                                         param_4,
-                                         param_5,
+            figure = self._update_figure(feature_1,
+                                         feature_2,
+                                         feature_3,
+                                         feature_4,
+                                         feature_5,
                                          plot_type_1,
                                          plot_type_2,
                                          plot_type_3,
@@ -171,7 +181,7 @@ class FiveVariablesPlot(DashboardObject):
                 raise PreventUpdate
             return figure
 
-    def _get_parameter_names_for_plot(self, data_id: str) -> List[str]:
+    def _get_feature_names_for_plot(self, data_id: str) -> List[str]:
         return ['param11', 'param12', 'param13']
 
     def _get_data_id_list(self) -> List[str]:
@@ -194,11 +204,11 @@ class FiveVariablesPlot(DashboardObject):
             time.sleep(0.5)
 
     def _update_figure(self,
-                       param_1,
-                       param_2,
-                       param_3,
-                       param_4,
-                       param_5,
+                       feature_1,
+                       feature_2,
+                       feature_3,
+                       feature_4,
+                       feature_5,
                        plot_type_1,
                        plot_type_2,
                        plot_type_3,
@@ -209,9 +219,9 @@ class FiveVariablesPlot(DashboardObject):
 
         self._update_data(data_id)
         data = []
-        for param, plot_type, sec_option_names in zip([param_1, param_2, param_3, param_4, param_5],
+        for param, plot_type, sec_option_names in zip([feature_1, feature_2, feature_3, feature_4, feature_5],
                                                       [plot_type_1, plot_type_2, plot_type_3, plot_type_4, plot_type_5],
-                                                      CHECKLIST_OPTIONS):
+                                                      SET_SECONDARY_CHECKLIST_OPTIONS):
             if param is not None and plot_type is not None:
                 is_secondary_plot = selected_secondary is not None and sec_option_names in selected_secondary
                 points = self._get_points(param, plot_type, is_secondary_plot)
