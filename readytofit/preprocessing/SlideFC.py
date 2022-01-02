@@ -10,7 +10,7 @@ class SlideFC(FeatureCreator):
         FeatureCreator.__init__(self, apply_feature, to_column, parameters=parameters)
         self.slide_values = self.parameters.get('slide_values')
 
-    def __parameters_description(self):
+    def _parameters_description(self):
         return [BaseParameter('slide_values', ParameterTypes.Integer, (0, 100))]
 
     def apply(self, ml_data: MlData):

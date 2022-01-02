@@ -1,4 +1,5 @@
 from unittest import TestCase
+from enum import Enum
 import numpy as np
 import pandas as pd
 from ..preprocessing.RenameLabelsFC import RenameLabelsFC
@@ -7,7 +8,7 @@ from ..preprocessing.SlideFC import SlideFC
 from ..preprocessing.ByColumnsNormalizationFC import ByColumnsNormalizationFC
 from ..preprocessing.SimpleSampleWeightsFC import SimpleSampleWeightsFC
 from ..data.MlDataFactory import MlDataFactory
-from ..data.FeatureCreator import CreatorApplyType
+from ..data.FeatureCreator import CreatorApplyType, FeatureCreator, ParameterTypes, BaseParameter, List
 import random
 
 
@@ -102,3 +103,49 @@ class TestFC(TestCase):
 
         renamed_ml_data = RenameLabelsFC(new_labels={0: 10, 1: 11, 2: 12}).apply(ml_data)
         assert ([11, 10, 10, 11, 11, 10, 10, 12, 10, 10] == renamed_ml_data.get_targets()).all()
+
+    def test_parameters(self):
+
+        class CatParam(Enum):
+            p1 = 1
+            p2 = 2
+            p3 = 3
+
+        class TestParameterFc(FeatureCreator):
+            def _parameters_description(self) -> List[BaseParameter]:
+                return [BaseParameter('int_param_1', ParameterTypes.Integer, boundaries=(0, 10)),
+                        BaseParameter('int_param_2', ParameterTypes.Integer, boundaries=(0, 10), nullable=True),
+                        BaseParameter('int_param_3', ParameterTypes.Integer, boundaries=(0, 10), default_value=12),
+
+                        BaseParameter('cat_param_1', ParameterTypes.Categorical, categorical_enum=CatParam),
+                        BaseParameter('cat_param_2', ParameterTypes.Categorical, categorical_enum=CatParam, nullable=True),
+
+                        BaseParameter('bool_param_1', ParameterTypes.Bool, default_value=True),
+                        BaseParameter('bool_param_2', ParameterTypes.Bool, default_value=False),
+                        BaseParameter('bool_param_3', ParameterTypes.Bool, default_value=False, nullable=True)
+                        ]
+
+        param_str = TestParameterFc([], CreatorApplyType.BeforeTrainBeforeLabel).get_parameters_string()
+        print(param_str)
+
+        param_str_list = param_str.split('\n')
+        assert param_str_list[0] == 'int_param_1(0, 10): 0'
+        assert param_str_list[1] == 'int_param_2(0, 10)(null): 0'
+        assert param_str_list[2] == 'int_param_3(0, 10): 12'
+        assert param_str_list[3] == 'cat_param_1(p1(1),p2(2),p3(3)): 1'
+        assert param_str_list[4] == 'cat_param_2(p1(1),p2(2),p3(3))(null): 1'
+        assert param_str_list[5] == 'bool_param_1: True'
+        assert param_str_list[6] == 'bool_param_2: False'
+        assert param_str_list[7] == 'bool_param_3(null): False'
+
+
+        result_str = """int_param_1(0, 10): 6
+                        int_param_2(0, 10)(null): 7
+                        int_param_3(0, 10): 12
+                        cat_param_1(p1(1),p2(2),p3(3)): 1
+                        cat_param_2(p1(1),p2(2),p3(3))(null): 1
+                        bool_param_1: True
+                        bool_param_2: False
+                        bool_param_3(null): False"""
+        test_fc = TestParameterFc([], CreatorApplyType.BeforeTrainBeforeLabel)
+        test_fc.load_parameters(result_str)

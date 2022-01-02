@@ -3,6 +3,8 @@ from ..db.MlTsValues import MlTsValues
 from ..db.MLDatabaseManager import MLDatabaseManager
 from ..tools.logging import logged
 from ..data.CreatorApplyType import CreatorApplyType
+from ..parameters.BaseParameter import BaseParameter
+from typing import List
 
 
 @logged
@@ -26,19 +28,16 @@ class FeatureCreator:
 
     @property
     def apply_after_label(self):
-        return self.creator_apply_type in (CreatorApplyType.BeforeTrainAfterLabel, CreatorApplyType.OnceOnAllDataAfterLabel)
+        return self.creator_apply_type in (CreatorApplyType.BeforeTrainAfterLabel,
+                                           CreatorApplyType.OnceOnAllDataAfterLabel)
 
     @property
     def once_all_data(self):
-        return self.creator_apply_type in (CreatorApplyType.OnceOnAllDataAfterLabel, CreatorApplyType.OnceOnAllDataBeforeLabel)
+        return self.creator_apply_type in (CreatorApplyType.OnceOnAllDataAfterLabel,
+                                           CreatorApplyType.OnceOnAllDataBeforeLabel)
 
     def apply(self, ml_data: MlData):
         return ml_data
-
-    def __str__(self):
-        not_private_keys = list(filter(lambda x: x[0] != '_', self.__dict__.keys()))
-        attr_dict = { your_key: self.__dict__[your_key] for your_key in not_private_keys }
-        return f'{self.__class__.__name__}({attr_dict})'
 
     def left_columns(self, current_columns):
         left_columns = []
@@ -58,3 +57,14 @@ class FeatureCreator:
             indexes = data.get_indexes()
         ml_ts_values = MlTsValues(self.run_id, feature_name, float_values=features, indexes=indexes)
         self.database.insert_ts_values(ml_ts_values)
+
+    def __str__(self):
+        not_private_keys = list(filter(lambda x: x[0] != '_', self.__dict__.keys()))
+        attr_dict = { your_key: self.__dict__[your_key] for your_key in not_private_keys }
+        return f'{self.__class__.__name__}({attr_dict})'
+
+    def _parameters_description(self) -> List[BaseParameter]:
+        return []
+
+    def get_parameters_description(self) -> List[BaseParameter]:
+        return self._parameters_description()
