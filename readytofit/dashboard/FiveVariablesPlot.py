@@ -38,7 +38,7 @@ SET_SECONDARY_CHECKLIST_OPTIONS = ['Set 1 y axis to secondary',
                                    'Set 5 y axis to secondary']
 
 
-class RealtimeUpdatePlot(DashboardObject):
+class FiveVariablesPlot(DashboardObject):
 
     def __init__(self, app: dash.Dash, title: str = 'ThreeVariablesPlot'):
         DashboardObject.__init__(self, app)
