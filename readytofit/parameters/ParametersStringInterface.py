@@ -11,7 +11,7 @@ class ParametersStringInterface:
 
         out_parameters = {}
         parameter_base_dict = dict(map(lambda x: (x.name, x), parameter_base_list))
-        parameters = re.findall('(\w+).*: ([-+]?\d+|True|False)', parameters_str, re.IGNORECASE)
+        parameters = re.findall('(\w+).*: ([-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][-+]?\d+)?|True|False)', parameters_str, re.IGNORECASE)
         for parameter_name, parameter_value in parameters:
             parameter_base = parameter_base_dict.get(parameter_name)
             if parameter_base is None or parameter_value.lower() in ('none', 'null'):
@@ -23,7 +23,7 @@ class ParametersStringInterface:
                     parameter_value_ = 'True' == parameter_value
 
                 elif parameter_base.type == ParameterTypes.Float:
-                    parameter_value_ = float(int(parameter_value))
+                    parameter_value_ = float(parameter_value)
                     if boundaries is not None:
                         parameter_value_ = max(min(parameter_value_, boundaries[1]), boundaries[0])
 
@@ -41,7 +41,6 @@ class ParametersStringInterface:
             except BaseException as e:
                 self._warning(f'{e}')
 
-        print(out_parameters)
         return out_parameters
 
     def get_parameters_string(self, parameter_base_list: List[BaseParameter]):
