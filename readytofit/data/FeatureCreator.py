@@ -5,6 +5,13 @@ from ..tools.logging import logged
 from ..data.CreatorApplyType import CreatorApplyType
 from ..parameters.BaseParameter import BaseParameter
 from typing import List
+from enum import Enum
+
+
+class ApplyType(Enum):
+
+    Iterative = 1
+    Vectorized = 2
 
 
 @logged
@@ -25,6 +32,7 @@ class FeatureCreator:
         self.database: MLDatabaseManager = None
         self.creator_apply_type = creator_apply_type
         self.parameters = parameters
+        self._iterative_method_implemented = False
 
     @property
     def apply_after_label(self):
@@ -36,8 +44,21 @@ class FeatureCreator:
         return self.creator_apply_type in (CreatorApplyType.OnceOnAllDataAfterLabel,
                                            CreatorApplyType.OnceOnAllDataBeforeLabel)
 
-    def apply(self, ml_data: MlData):
-        return ml_data
+    def _vectorized_apply(self, ml_data: MlData):
+        raise NotImplemented()
+
+    def _iterative_apply(self, ml_data: MlData):
+        raise NotImplemented()
+
+    def apply(self, ml_data: MlData,
+              apply_on_new_values=False,
+              apply_mode: ApplyType = ApplyType.Vectorized):
+        self._warning('should be implemented apply_on_new_values')
+        if apply_mode == ApplyType.Vectorized:
+            return self._vectorized_apply(ml_data)
+        elif apply_mode == ApplyType.Iterative:
+            return self._iterative_apply(ml_data)
+
 
     def left_columns(self, current_columns):
         left_columns = []

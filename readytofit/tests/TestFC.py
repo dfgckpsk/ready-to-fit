@@ -8,7 +8,9 @@ from ..preprocessing.SlideFC import SlideFC
 from ..preprocessing.ByColumnsNormalizationFC import ByColumnsNormalizationFC
 from ..preprocessing.SimpleSampleWeightsFC import SimpleSampleWeightsFC
 from ..data.MlDataFactory import MlDataFactory
-from ..data.FeatureCreator import CreatorApplyType, FeatureCreator, ParameterTypes, BaseParameter, List
+from ..data.FeatureCreator import CreatorApplyType, FeatureCreator, List
+from ..parameters.BaseParameter import ParameterTypes, BaseParameter
+from ..parameters.ParametersStringInterface import ParametersStringInterface
 import random
 
 
@@ -125,7 +127,8 @@ class TestFC(TestCase):
                         BaseParameter('bool_param_3', ParameterTypes.Bool, default_value=False, nullable=True)
                         ]
 
-        param_str = TestParameterFc([], CreatorApplyType.BeforeTrainBeforeLabel).get_parameters_string()
+        feature = TestParameterFc([], CreatorApplyType.BeforeTrainBeforeLabel)
+        param_str = ParametersStringInterface().get_parameters_string(feature.get_parameters_description())
         print(param_str)
 
         param_str_list = param_str.split('\n')
@@ -148,4 +151,5 @@ class TestFC(TestCase):
                         bool_param_2: False
                         bool_param_3(null): False"""
         test_fc = TestParameterFc([], CreatorApplyType.BeforeTrainBeforeLabel)
-        test_fc.load_parameters(result_str)
+        ParametersStringInterface().load_parameters(result_str,
+                                                    feature.get_parameters_description())
